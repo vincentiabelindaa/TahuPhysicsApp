@@ -2,9 +2,10 @@ import { Tabs } from 'expo-router';
 import React from 'react';
 
 import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
+// 1. Ganti import IconSymbol jadi Ionicons langsung dari vector-icons
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -15,16 +16,16 @@ export default function TabLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-        // Tips: Jika 5 icon terlalu sempit, kamu bisa atur label style disini
-        tabBarLabelStyle: { fontSize: 10, marginBottom: 4 }, 
+        tabBarLabelStyle: { fontSize: 10, marginBottom: 4 },
       }}>
       
-      {/* 1. Home (index.tsx) */}
+      {/* 1. Home */}
       <Tabs.Screen
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          // house.fill -> home
+          tabBarIcon: ({ color }) => <Ionicons size={25} name="home" color={color} />,
         }}
       />
 
@@ -33,16 +34,18 @@ export default function TabLayout() {
         name="playlist"
         options={{
           title: 'Playlist',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="play.rectangle.fill" color={color} />,
+          // play.rectangle.fill -> play-circle
+          tabBarIcon: ({ color }) => <Ionicons size={25} name="play-circle" color={color} />,
         }}
       />
 
       {/* 3. Virtual Lab */}
       <Tabs.Screen
-        name="lab"
+        name="lab" // Pastikan nama file kamu lab.tsx
         options={{
           title: 'Lab',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="flask.fill" color={color} />,
+          // flask.fill -> flask
+          tabBarIcon: ({ color }) => <Ionicons size={25} name="flask" color={color} />,
         }}
       />
 
@@ -51,7 +54,8 @@ export default function TabLayout() {
         name="quiz"
         options={{
           title: 'Quiz',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="lightbulb.fill" color={color} />,
+          // lightbulb.fill -> bulb
+          tabBarIcon: ({ color }) => <Ionicons size={25} name="bulb" color={color} />,
         }}
       />
 
@@ -60,7 +64,8 @@ export default function TabLayout() {
         name="challenge"
         options={{
           title: 'Challenge',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="trophy.fill" color={color} />,
+          // trophy.fill -> trophy
+          tabBarIcon: ({ color }) => <Ionicons size={25} name="trophy" color={color} />,
         }}
       />
 
