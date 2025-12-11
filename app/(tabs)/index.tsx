@@ -1,6 +1,6 @@
-import React from 'react';
-import { Image, StyleSheet, Platform, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
+import React from 'react';
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
@@ -69,25 +69,25 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </Link>
             </View>
-
-            {/* Kartu 3: Challenge */}
-            <View style={styles.card}>
-              <Text style={styles.cardTitle}>🎯 Tantangan</Text>
-              <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan menggunakan Virtual Lab.</Text>
-              <Link href="/challenge" asChild>
-                <TouchableOpacity style={styles.button}>
-                  <Text style={styles.buttonText}>Mulai Tantangan</Text>
-                </TouchableOpacity>
-              </Link>
-            </View>
-
-            {/* Kartu 4: Quiz */}
+            
+            {/* Kartu 3: Quiz */}
             <View style={styles.card}>
               <Text style={styles.cardTitle}>📝 Quiz</Text>
               <Text style={styles.cardDesc}>Tes kemampuanmu melalui kuis interaktif.</Text>
               <Link href="/quiz" asChild>
                 <TouchableOpacity style={styles.button}>
                   <Text style={styles.buttonText}>Mulai Kuis</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+
+            {/* Kartu 4: Challenge */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>🎯 Tantangan</Text>
+              <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan menggunakan Virtual Lab.</Text>
+              <Link href="/challenge" asChild>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Mulai Tantangan</Text>
                 </TouchableOpacity>
               </Link>
             </View>
@@ -175,15 +175,19 @@ const styles = StyleSheet.create({
     gap: 20, // Jarak antar kartu
   },
   card: {
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
-    // Shadow untuk efek kartu timbul
+    marginBottom: -10,
+    borderWidth: 2,
+    borderColor: '#bbdefb', // Border biru muda
+    // Shadow style (Android & iOS)
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 3, // Shadow khusus Android
+    elevation: 3, 
+    position: 'relative'
   },
   cardTitle: {
     fontSize: 18,
