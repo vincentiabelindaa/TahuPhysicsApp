@@ -1,98 +1,221 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
+import React from 'react';
+import { Image, StyleSheet, Platform, ScrollView, View, Text, TouchableOpacity } from 'react-native';
 import { Link } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function HomeScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome to TahuPhysics!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f0f2f5' }}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        
+        {/* --- BAGIAN HEADER (Pengganti Sidebar Header) --- */}
+        <View style={styles.header}>
+          <Image 
+            // Pastikan gambar tahu.jpg sudah ada di assets/images
+            // Kalau belum ada, ganti baris ini pakai require('@/assets/images/react-logo.png') sementara
+            source={require('@/assets/images/tahu.jpg')} 
+            style={styles.logo}
+          />
+          <View>
+            <Text style={styles.headerTitle}>TahuPhysics</Text>
+            <Text style={styles.headerSubtitle}>Belajar Fisika Jadi Mudah</Text>
+          </View>
+        </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+        {/* --- BAGIAN PROFIL SINGKAT --- */}
+        <View style={styles.profileSection}>
+          <Image 
+            // Pastikan profile.jpg ada di assets/images
+            source={require('@/assets/images/profile.jpg')} 
+            style={styles.profileImage} 
+          />
+          <View>
+            <Text style={styles.welcomeText}>Halo, Selamat Datang! 👋</Text>
+            {/* Nanti ini kita ganti pakai data Firebase asli */}
+            <Text style={styles.userName}>Guest User</Text>
+          </View>
+        </View>
+
+        {/* --- KONTEN UTAMA --- */}
+        <View style={styles.mainContent}>
+          <Text style={styles.sectionTitle}>Mulai Belajar</Text>
+          <Text style={styles.sectionDesc}>
+            Mulai petualanganmu belajar Fisika topik Usaha dan Energi. Pilih menu di bawah ini:
+          </Text>
+
+          {/* --- FEATURE CARDS (Grid Menu) --- */}
+          <View style={styles.cardContainer}>
+            
+            {/* Kartu 1: Playlist */}
+            {/* Link href belum ada filenya, nanti error kalau diklik sebelum filenya dibuat */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>📹 Materi Playlist</Text>
+              <Text style={styles.cardDesc}>Tonton video pembelajaran interaktif konsep Usaha dan Energi.</Text>
+              <Link href="/playlist" asChild>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Lihat Materi</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+
+            {/* Kartu 2: Virtual Lab */}
+            {/* Mengarah ke /lab (sesuai file yang kita rename tadi) */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>⚗️ Virtual Lab</Text>
+              <Text style={styles.cardDesc}>Simulasikan Energi Kinetik & Potensial secara interaktif.</Text>
+              <Link href="/lab" asChild>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Masuk Lab</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+
+            {/* Kartu 3: Challenge */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>🎯 Tantangan</Text>
+              <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan menggunakan Virtual Lab.</Text>
+              <Link href="/challenge" asChild>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Mulai Tantangan</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+
+            {/* Kartu 4: Quiz */}
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>📝 Quiz</Text>
+              <Text style={styles.cardDesc}>Tes kemampuanmu melalui kuis interaktif.</Text>
+              <Link href="/quiz" asChild>
+                <TouchableOpacity style={styles.button}>
+                  <Text style={styles.buttonText}>Mulai Kuis</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+
+          </View>
+        </View>
+
+        {/* --- FOOTER --- */}
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>© 2025 IndiBelin | All rights reserved</Text>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+// --- STYLE (CSS-nya Mobile) ---
 const styles = StyleSheet.create({
-  titleContainer: {
+  scrollContainer: {
+    paddingBottom: 20,
+  },
+  header: {
+    backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
   },
-  stepContainer: {
-    gap: 8,
+  logo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 15,
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#0d47a1',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#666',
+  },
+  profileSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#e3f2fd', // Warna biru muda ala TahuPhysics
+  },
+  profileImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    marginRight: 15,
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  welcomeText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  userName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  mainContent: {
+    padding: 20,
+  },
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  sectionDesc: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    lineHeight: 22,
+  },
+  cardContainer: {
+    gap: 20, // Jarak antar kartu
+  },
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    // Shadow untuk efek kartu timbul
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3, // Shadow khusus Android
+  },
+  cardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#0d47a1',
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  cardDesc: {
+    fontSize: 14,
+    color: '#555',
+    marginBottom: 15,
+    lineHeight: 20,
   },
+  button: {
+    backgroundColor: '#42a5f5',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  footer: {
+    marginTop: 20,
+    alignItems: 'center',
+    padding: 20,
+  },
+  footerText: {
+    color: '#999',
+    fontSize: 12,
+  }
 });
