@@ -123,7 +123,7 @@ export default function HomeScreen() {
 // --- STYLE (CSS-nya Mobile) ---
 const styles = StyleSheet.create({
   scrollContainer: {
-    paddingBottom: 20,
+    paddingBottom: 50,
   },
   header: {
     backgroundColor: '#fff',
