@@ -1,13 +1,15 @@
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/theme';
-import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function HomeScreen() {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#f0f2f5' }}>
+    <SafeAreaView 
+      edges={['top', 'left', 'right']}
+      style={{ flex: 1, backgroundColor: '#f0f2f5' }}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         
         {/* --- BAGIAN HEADER (Pengganti Sidebar Header) --- */}
@@ -192,13 +194,13 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   cardContainer: {
-    gap: 20, // Jarak antar kartu
+    gap: 10, // Jarak antar kartu
   },
   card: {
     backgroundColor: '#fff',
     borderRadius: 12,
     padding: 20,
-    marginBottom: -10,
+    marginBottom: 0,
     borderWidth: 2,
     borderColor: '#bbdefb', // Border biru muda
     // Shadow style (Android & iOS)
