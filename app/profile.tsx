@@ -1,25 +1,33 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
-import { Stack } from 'expo-router';
-import { Colors } from '@/constants/theme'; // Ambil tema
+import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Stack, useRouter } from 'expo-router'; 
+import { Colors } from '@/constants/theme'; 
+import Ionicons from '@expo/vector-icons/Ionicons'; 
 
 export default function ProfileScreen() {
   const theme = Colors.light;
+  const router = useRouter(); 
 
-  // State untuk form (biar nanti gampang disambung ke backend)
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('belindaaa@gmail.com'); // Read-only example
+  const [email, setEmail] = useState('belindaaa@gmail.com'); 
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
 
   return (
     <>
-      {/* Header Halaman */}
       <Stack.Screen options={{ 
         title: 'Profil Saya',
         headerStyle: { backgroundColor: theme.background },
         headerTintColor: theme.primary,
+        // --- BAGIAN INI YANG DIGANTI ---
+        headerLeft: () => (
+          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15, padding: 5 }}>
+             {/* Ganti jadi 'chevron-back' supaya lebih cocok untuk iPhone & Android */}
+             <Ionicons name="chevron-back" size={28} color={theme.primary} />
+          </TouchableOpacity>
+        ),
+        // -------------------------------
       }} />
 
       <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
@@ -30,7 +38,6 @@ export default function ProfileScreen() {
             Informasi Akun
           </Text>
 
-          {/* Input Nama */}
           <Text style={styles.label}>Nama Lengkap:</Text>
           <TextInput 
             style={styles.input}
@@ -39,15 +46,13 @@ export default function ProfileScreen() {
             placeholder="Masukkan nama lengkap"
           />
 
-          {/* Input Email (Read Only) */}
           <Text style={styles.label}>Email:</Text>
           <TextInput 
-            style={[styles.input, styles.readOnly]} // Style khusus read-only
+            style={[styles.input, styles.readOnly]} 
             value={email}
-            editable={false} // Supaya gabisa diedit
+            editable={false} 
           />
 
-          {/* Tombol Update */}
           <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]}>
             <Text style={styles.buttonText}>Update Profil</Text>
           </TouchableOpacity>
@@ -64,7 +69,7 @@ export default function ProfileScreen() {
             style={styles.input}
             value={oldPass}
             onChangeText={setOldPass}
-            secureTextEntry={true} // Biar jadi bintang-bintang *****
+            secureTextEntry={true} 
           />
 
           <Text style={styles.label}>Password Baru (min. 6 karakter):</Text>
@@ -83,13 +88,11 @@ export default function ProfileScreen() {
             secureTextEntry={true}
           />
 
-          {/* Tombol Ganti Password */}
           <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]}>
             <Text style={styles.buttonText}>Ganti Password</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Tombol Logout (Merah) */}
         <TouchableOpacity style={[styles.logoutButton, { backgroundColor: theme.danger }]}>
             <Text style={[styles.logoutText, { color: '#c62828' }]}>Keluar (Logout)</Text>
         </TouchableOpacity>
@@ -110,10 +113,9 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: 'white',
-    borderRadius: 8,
+    borderRadius: 12, 
     padding: 20,
     marginBottom: 20,
-    // Border & Shadow
     borderWidth: 1,
     borderColor: '#e0e0e0',
     shadowColor: '#000',
@@ -134,23 +136,24 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 5,
+    marginLeft: 2,
   },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+    borderRadius: 12, 
+    padding: 12,
     marginBottom: 15,
     fontSize: 16,
     backgroundColor: '#fff',
   },
   readOnly: {
-    backgroundColor: '#f5f5f5', // Abu-abu dikit nunjukin gak bisa diedit
+    backgroundColor: '#f5f5f5', 
     color: '#666',
   },
   button: {
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 12, 
     alignItems: 'center',
     marginTop: 5,
   },
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     padding: 12,
-    borderRadius: 5,
+    borderRadius: 12,
     alignItems: 'center',
     marginBottom: 20,
     borderWidth: 1,
