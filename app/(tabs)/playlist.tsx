@@ -1,112 +1,168 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState, useCallback } from 'react';
+// 1. Tambah useWindowDimensions
+import { StyleSheet, Text, View, ScrollView, Platform, useWindowDimensions } from 'react-native';
+import { Stack } from 'expo-router';
+import YoutubePlayer from "react-native-youtube-iframe";
+import { Colors } from '@/constants/theme'; 
 
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function PlaylistScreen() {
+  
+  const playlistId = "PLXz9cUd9nygPdfr9RD4579RyNsHvxjhu1";
+  const theme = Colors.light;
+  const [playing, setPlaying] = useState(false);
 
-export default function TabTwoScreen() {
+  // --- LOGIKA UKURAN VIDEO ---
+  const { width } = useWindowDimensions();
+  // Kita kurangi 70 pixel karena ada padding kiri kanan di layout (20+15 = 35 x 2 sisi)
+  const videoWidth = width - 70; 
+  // Rumus 16:9 (Standar YouTube)
+  const videoHeight = videoWidth * (9 / 16);
+
+  const onStateChange = useCallback((state: string) => {
+    if (state === "ended") {
+      setPlaying(false);
+    }
+  }, []);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+    <>
+      <Stack.Screen options={{ 
+        title: 'Playlist',
+        headerStyle: { backgroundColor: theme.background },
+        headerTintColor: theme.primary,
+      }} />
+
+      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
+        
+        <Text style={[styles.title, { color: theme.text }]}>Playlist Materi</Text>
+        <Text style={styles.subtitle}>
+          Selesaikan semua materi di bawah ini untuk menguasai konsep usaha dan energi!
+        </Text>
+
+        <View style={styles.videoContainer}>
+          <Text style={[styles.sectionHeader, { color: theme.primary }]}>
+            Selesaikan Materi Usaha dan Energi
+          </Text>
+          
+          {/* Style height pembungkusnya kita hapus/sesuaikan biar ngikutin video */}
+          <View style={[styles.videoPlayerBox, { height: videoHeight }]}>
+            {Platform.OS === 'web' ? (
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src={`https://www.youtube.com/embed/videoseries?list=${playlistId}`}
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen 
+              />
+            ) : (
+              <YoutubePlayer
+                height={videoHeight} // <-- PAKAI TINGGI DINAMIS
+                play={playing}
+                playList={playlistId}
+                onChangeState={onStateChange}
+                webViewProps={{
+                  allowsInlineMediaPlayback: true,
+                }}
+              />
+            )}
+          </View>
+        </View>
+
+        <View style={[styles.descriptionBox, { borderColor: theme.cardBorder }]}>
+          <Text style={styles.paragraph}>
+            Playlist ini mencakup enam video pembelajaran yang mendalam tentang konsep 
+            <Text style={{fontWeight: 'bold', color: theme.primary}}> Usaha dan Energi</Text> dalam fisika.
+          </Text>
+          
+          <Text style={styles.paragraph}>
+            Mulai dari pengenalan dasar <Text style={{fontWeight: 'bold', color: theme.primary}}>Konsep Usaha</Text> (part 1), 
+            teorema <Text style={{fontWeight: 'bold', color: theme.primary}}>Usaha-Energi Kinetik</Text> (part 2), hingga 
+            pembahasan <Text style={{fontWeight: 'bold', color: theme.primary}}>Energi Potensial</Text> (part 3).
+          </Text>
+          
+          <Text style={styles.paragraph}>
+            Selain itu, juga dibahas konsep <Text style={{fontWeight: 'bold', color: theme.primary}}>Energi Mekanik</Text> dan 
+            <Text style={{fontWeight: 'bold', color: theme.primary}}> Hukum Kekekalan Energi</Text> (part 4 & 5), serta 
+            penerapan <Text style={{fontWeight: 'bold', color: theme.primary}}>Daya</Text> (part 6).
+          </Text>
+
+          <Text style={styles.paragraph}>
+            Terdapat <Text style={{fontWeight: 'bold', color: theme.primary}}>5 pembahasan problem set</Text> yang dapat dicoba 
+            untuk memahami pengetahuan.
+          </Text>
+        </View>
+
+        <View style={styles.footer}>
+           <Text style={styles.footerText}>© 2025 IndiBelin | All rights reserved</Text>
+        </View>
+
+      </ScrollView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flexGrow: 1,
+    padding: 20, // Ini padding luar (20px)
   },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 8,
   },
+  subtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 20,
+  },
+  videoContainer: {
+    backgroundColor: 'white',
+    padding: 15, // Ini padding dalam kartu (15px)
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginBottom: 20,
+  },
+  sectionHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    paddingBottom: 10,
+  },
+  videoPlayerBox: {
+    width: '100%',
+    // Height statis 220 dihapus dari sini, dipindah ke inline style
+    backgroundColor: '#000',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  descriptionBox: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  paragraph: {
+    fontSize: 15,
+    color: '#444',
+    lineHeight: 24,
+    marginBottom: 12,
+    textAlign: 'justify',
+  },
+  footer: {
+    marginTop: 30,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  footerText: {
+    color: '#999',
+    fontSize: 12,
+  }
 });

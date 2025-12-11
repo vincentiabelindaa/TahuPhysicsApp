@@ -1,22 +1,39 @@
 /**
- * Below are the colors that are used in the app. The colors are defined in the light and dark mode.
- * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
+ * Konfigurasi Warna TahuPhysics
+ * File: constants/theme.ts
  */
 
 import { Platform } from 'react-native';
 
-const tintColorLight = '#0a7ea4';
+// --- PALET WARNA TAHUPHYSICS (Global) ---
+const tahuPrimary = '#0d47a1';      // Biru Tua (Judul)
+const tahuSecondary = '#1e88e5';    // Biru Terang (Tombol/Link)
+const tahuBackground = '#f0f8ff';   // Latar Belakang (Biru Sangat Muda)
+const tahuCardBorder = '#bbdefb';   // Garis Pinggir Kartu
+const tahuText = '#333333';         // Teks Utama
+
+// Warna Navigasi
+const tintColorLight = tahuSecondary;
 const tintColorDark = '#fff';
 
 export const Colors = {
   light: {
-    text: '#11181C',
-    background: '#fff',
+    text: tahuText,
+    background: tahuBackground,
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    
+    // --- KAMUS WARNA TAHUPHYSICS ---
+    primary: tahuPrimary,       // #0d47a1
+    secondary: tahuSecondary,   // #1e88e5 (Ini warna tombol kamu)
+    cardBorder: tahuCardBorder, // #bbdefb
+    cardBg: '#ffffff',          
+    success: '#e8f5e9',         
+    danger: '#ffcdd2',          
   },
+  
   dark: {
     text: '#ECEDEE',
     background: '#151718',
@@ -24,18 +41,24 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+
+    // --- KAMUS DARK MODE ---
+    // Saya sesuaikan sedikit supaya teks Putih di tombol tetap terbaca
+    primary: '#64b5f6',         
+    secondary: '#1e88e5',       // Saya samakan dengan light biar tombol tetap biru jelas
+    cardBorder: '#424242',
+    cardBg: '#2d2d2d',
+    success: '#1b5e20',
+    danger: '#b71c1c',
   },
 };
 
+// Bagian Fonts (Bawaan Expo)
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
