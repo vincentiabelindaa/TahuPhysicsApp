@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
-import React, { useEffect, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
+import React, { useCallback, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// Data Tantangan (Biar codingnya rapi, kita buat array object)
 const CHALLENGES_DATA = [
   {
     id: 'challenge_1',
@@ -21,10 +20,16 @@ export default function ChallengeScreen() {
   const router = useRouter();
   const [completedChallenges, setCompletedChallenges] = useState<string[]>([]);
 
-  // 1. Load data progress saat aplikasi dibuka
-  useEffect(() => {
-    loadProgress();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // 1. Load data progress saat buka halaman
+      loadProgress();
+      
+      // 2. Auto-Reset: Setiap buka halaman ini, batalkan tantangan aktif
+      // supaya kalau masuk Lab lagi, tidak langsung muncul tantangan.
+      resetActiveChallenge();
+    }, [])
+  );
 
   const loadProgress = async () => {
     try {
@@ -37,40 +42,36 @@ export default function ChallengeScreen() {
     }
   };
 
-  // 2. Fungsi Mulai Tantangan
+  const resetActiveChallenge = async () => {
+    try {
+      await AsyncStorage.removeItem('activeChallenge');
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const handleStart = async (challengeId: string) => {
     try {
-      // Simpan challenge mana yang sedang aktif (mirip logic web kamu)
       await AsyncStorage.setItem('activeChallenge', challengeId);
-      
-      // Pindah ke halaman Virtual Lab
-      // Pastikan nama filenya 'lab.tsx' sesuai layout sebelumnya
       router.push('/lab'); 
     } catch (e) {
       console.error(e);
     }
   };
 
-  // 3. Fungsi Reset Tantangan
   const handleReset = async (challengeId: string) => {
     try {
-      // Filter array: buang ID yang mau di-reset
       const newStatus = completedChallenges.filter(id => id !== challengeId);
       setCompletedChallenges(newStatus);
-      
-      // Simpan status baru ke storage
       await AsyncStorage.setItem('completedChallenges', JSON.stringify(newStatus));
-      
       Alert.alert("Reset Berhasil", "Tantangan bisa dikerjakan ulang.");
     } catch (e) {
       console.error(e);
     }
   };
 
-  // --- Render UI ---
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Tantangan Fisika</Text>
         <Text style={styles.headerSubtitle}>
@@ -85,7 +86,6 @@ export default function ChallengeScreen() {
           return (
             <View key={item.id} style={styles.card}>
               
-              {/* Badge Selesai (Posisi Absolute di pojok kanan) */}
               {isCompleted && (
                 <View style={styles.badgeContainer}>
                   <Text style={styles.badgeText}>✅ Selesai</Text>
@@ -93,12 +93,8 @@ export default function ChallengeScreen() {
               )}
 
               <Text style={styles.cardTitle}>{item.title}</Text>
-              
-              <Text style={styles.cardDesc}>
-                {item.description}
-              </Text>
+              <Text style={styles.cardDesc}>{item.description}</Text>
 
-              {/* Logic Tombol: Jika selesai -> Reset, Jika belum -> Mulai */}
               {isCompleted ? (
                 <TouchableOpacity 
                   style={styles.resetBtn} 
@@ -117,25 +113,22 @@ export default function ChallengeScreen() {
             </View>
           );
         })}
-
-        {/* Footer sederhana */}
-        <Text style={styles.footerText}>
-          © 2025 TahuPhysics Mobile
-        </Text>
+        
+        <Text style={styles.footerText}>© 2025 TahuPhysics Mobile</Text>
       </ScrollView>
     </View>
   );
 }
 
-// --- Styling (Mirip CSS kamu tapi versi React Native) ---
+// --- STYLES (Sudah dirapikan ke bawah) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa', // Background abu-abu muda
+    backgroundColor: '#f8f9fa',
   },
   header: {
     padding: 20,
-    paddingTop: 60, // Biar ga ketutup status bar
+    paddingTop: 60,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
@@ -143,7 +136,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#0d47a1', // Warna biru tua sesuai web
+    color: '#0d47a1',
     marginBottom: 5,
   },
   headerSubtitle: {
@@ -161,29 +154,28 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: '#bbdefb', // Border biru muda
-    // Shadow style (Android & iOS)
+    borderColor: '#bbdefb',
+    // Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 4,
-    elevation: 3, 
-    position: 'relative', // Penting buat badge absolute
+    elevation: 3,
+    position: 'relative',
   },
   cardTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#0d47a1',
     marginBottom: 10,
-    paddingRight: 60, // Biar judul ga nabrak badge
+    paddingRight: 60,
   },
   cardDesc: {
     fontSize: 14,
     color: '#333',
-    lineHeight: 22, // Spasi antar baris biar enak dibaca
+    lineHeight: 22,
     marginBottom: 20,
   },
-  // Tombol Mulai (Biru Solid)
   startBtn: {
     backgroundColor: '#42a5f5',
     paddingVertical: 12,
@@ -195,7 +187,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  // Tombol Reset (Biru Pucat)
   resetBtn: {
     backgroundColor: '#e3f2fd',
     paddingVertical: 12,
@@ -209,7 +200,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 16,
   },
-  // Badge Selesai
   badgeContainer: {
     position: 'absolute',
     top: 15,
@@ -231,5 +221,5 @@ const styles = StyleSheet.create({
     color: '#999',
     fontSize: 12,
     marginTop: 10,
-  }
+  },
 });
