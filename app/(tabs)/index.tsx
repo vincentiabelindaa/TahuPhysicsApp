@@ -2,6 +2,8 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Colors } from '@/constants/theme';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function HomeScreen() {
   return (
@@ -9,17 +11,30 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         
         {/* --- BAGIAN HEADER (Pengganti Sidebar Header) --- */}
+        {/* --- HEADER --- */}
         <View style={styles.header}>
-          <Image 
-            // Pastikan gambar tahu.jpg sudah ada di assets/images
-            // Kalau belum ada, ganti baris ini pakai require('@/assets/images/react-logo.png') sementara
-            source={require('@/assets/images/tahu.jpg')} 
-            style={styles.logo}
-          />
-          <View>
-            <Text style={styles.headerTitle}>TahuPhysics</Text>
-            <Text style={styles.headerSubtitle}>Belajar Fisika Jadi Mudah</Text>
+          
+          {/* BAGIAN KIRI: Logo & Judul */}
+          <View style={styles.headerLeft}>
+            <Image 
+              source={require('@/assets/images/tahu.jpg')} 
+              style={styles.logo}
+            />
+            <View>
+              <Text style={[styles.headerTitle, ]}>
+                TahuPhysics
+              </Text>
+              <Text style={styles.headerSubtitle}>Belajar Fisika Jadi Mudah</Text>
+            </View>
           </View>
+
+          {/* BAGIAN KANAN: Ikon Profil */}
+          <Link href="/profile" asChild>
+            <TouchableOpacity>
+              <Ionicons name="person-circle-outline" size={36} color="#0d47a1" />
+            </TouchableOpacity>
+          </Link>
+          
         </View>
 
         {/* --- BAGIAN PROFIL SINGKAT --- */}
@@ -49,7 +64,7 @@ export default function HomeScreen() {
             {/* Kartu 1: Playlist */}
             {/* Link href belum ada filenya, nanti error kalau diklik sebelum filenya dibuat */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>📹 Materi Playlist</Text>
+              <Text style={styles.cardTitle}>Materi Playlist</Text>
               <Text style={styles.cardDesc}>Tonton video pembelajaran interaktif konsep Usaha dan Energi.</Text>
               <Link href="/playlist" asChild>
                 <TouchableOpacity style={styles.button}>
@@ -61,7 +76,7 @@ export default function HomeScreen() {
             {/* Kartu 2: Virtual Lab */}
             {/* Mengarah ke /lab (sesuai file yang kita rename tadi) */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>⚗️ Virtual Lab</Text>
+              <Text style={styles.cardTitle}>Virtual Lab</Text>
               <Text style={styles.cardDesc}>Simulasikan Energi Kinetik & Potensial secara interaktif.</Text>
               <Link href="/lab" asChild>
                 <TouchableOpacity style={styles.button}>
@@ -72,7 +87,7 @@ export default function HomeScreen() {
             
             {/* Kartu 3: Quiz */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>📝 Quiz</Text>
+              <Text style={styles.cardTitle}>Quiz</Text>
               <Text style={styles.cardDesc}>Tes kemampuanmu melalui kuis interaktif.</Text>
               <Link href="/quiz" asChild>
                 <TouchableOpacity style={styles.button}>
@@ -83,7 +98,7 @@ export default function HomeScreen() {
 
             {/* Kartu 4: Challenge */}
             <View style={styles.card}>
-              <Text style={styles.cardTitle}>🎯 Tantangan</Text>
+              <Text style={styles.cardTitle}>Tantangan</Text>
               <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan menggunakan Virtual Lab.</Text>
               <Link href="/challenge" asChild>
                 <TouchableOpacity style={styles.button}>
@@ -112,11 +127,16 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'row',       // Susun ke samping
+    alignItems: 'center',       // Rata tengah vertikal
+    justifyContent: 'space-between', // PENTING: Logo kiri, Profil kanan
     padding: 20,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+  },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   logo: {
     width: 50,
