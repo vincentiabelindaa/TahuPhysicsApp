@@ -38,10 +38,15 @@ export default function LabScreen() {
         }
         await AsyncStorage.removeItem('activeChallenge');
         
+        // Hapus banner di UI
         if (webViewRef.current) {
           webViewRef.current.injectJavaScript(`window.receiveActiveChallenge('');`);
         }
-        Alert.alert("🎉 Selamat!", data.message);
+        
+        // Tampilkan Alert setelah UI bersih
+        setTimeout(() => {
+             Alert.alert("🎉 Selamat!", data.message);
+        }, 100);
       }
       
       if (data.type === 'CHALLENGE_CANCEL') {
@@ -157,7 +162,7 @@ export default function LabScreen() {
       
       <div class="top-panel">
         <div id="challenge-banner">
-           <span>🎯 <span id="ch-text"></span></span>
+           <span>🤔 <span id="ch-text"></span></span>
            <span class="cancel-link" onclick="cancelChallenge()">Batalkan</span>
         </div>
         
@@ -216,7 +221,6 @@ export default function LabScreen() {
         let segments = []; let animationId = null; let progress = 0; 
         
         let MASS = 5; 
-        // --- UKURAN BOLA DIPERBESAR (Base: 10px) ---
         let BALL_RADIUS = 10 + MASS; 
 
         let activeChallengeId = null;
@@ -272,7 +276,6 @@ export default function LabScreen() {
         document.getElementById('massRange').oninput = function(e) { 
           MASS = parseFloat(e.target.value); 
           document.getElementById('massVal').innerText = MASS;
-          // Rumus ukuran bola (Updated):
           BALL_RADIUS = 10 + MASS; 
           resetSim(); 
         };
@@ -292,7 +295,6 @@ export default function LabScreen() {
         }
 
         function drawBall(x, y) {
-          // Posisi Y dikurang BALL_RADIUS supaya bola "duduk" di atas garis
           const centerY = y - BALL_RADIUS;
 
           ctx.beginPath(); 
@@ -300,7 +302,6 @@ export default function LabScreen() {
           ctx.fillStyle = "#d32f2f"; ctx.fill();
           ctx.strokeStyle = "white"; ctx.lineWidth = 2; ctx.stroke();
           
-          // Kilauan
           ctx.beginPath(); 
           const shineOffset = BALL_RADIUS * 0.3;
           ctx.arc(x - shineOffset, centerY - shineOffset, 2, 0, Math.PI * 2); 
@@ -375,10 +376,17 @@ export default function LabScreen() {
           if(id && id !== '') {
              banner.style.display = 'flex'; 
              if(id === 'challenge_1') txt.innerText = "1 Bukit & 1 Lembah";
-             else if(id === 'challenge_2') txt.innerText = "Kompleks (3L, 2Trn, 3Nk)";
+             else if(id === 'challenge_2') txt.innerText = "Tantangan #2 (7.5kg, 1 Datar, 2 Naik, 1 Lembah, 1 Turun, 1 Bukit)";
           } else {
              activeChallengeId = null; banner.style.display = 'none';
           }
+          
+          // FIX: Panggil resize SEKARANG JUGA (Instant), jangan nunggu timeout
+          // Ini mencegah efek gepeng/glitch saat banner hilang tiba-tiba
+          resize();
+          
+          // Fallback: panggil lagi sedikit nanti utk memastikan layout final
+          setTimeout(resize, 50);
         }
 
         window.cancelChallenge = function() {
@@ -392,13 +400,16 @@ export default function LabScreen() {
            const valleyCount = segments.filter(s => s.type === 'valley').length;
            const upCount = segments.filter(s => s.type === 'up').length;
            const downCount = segments.filter(s => s.type === 'down').length;
+           const flatCount = segments.filter(s => s.type === 'flat').length;
 
            let success = false; let msg = "";
            if(activeChallengeId === 'challenge_1') {
-              if(MASS == 5 && hillCount >= 1 && valleyCount >= 1) { success = true; msg = "Tantangan Dasar Selesai!"; }
+              if(MASS == 5 && hillCount >= 1 && valleyCount >= 1) { success = true; msg = "Tantangan #1 Selesai!"; }
            }
            else if(activeChallengeId === 'challenge_2') {
-              if(MASS == 5 && valleyCount >= 3 && downCount >= 2 && upCount >= 3) { success = true; msg = "Tantangan Kompleks Selesai!"; }
+              if(MASS == 7.5 && flatCount >= 1 && upCount >= 2 && valleyCount >= 1 && downCount >= 1 && hillCount >= 1) { 
+                 success = true; msg = "Tantangan #2 Selesai!"; 
+              }
            }
            if(success) {
              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'CHALLENGE_COMPLETE', challengeId: activeChallengeId, message: msg }));

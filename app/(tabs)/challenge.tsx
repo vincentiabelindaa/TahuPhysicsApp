@@ -11,8 +11,9 @@ const CHALLENGES_DATA = [
   },
   {
     id: 'challenge_2',
-    title: 'Tantangan #2: Lintasan Kompleks',
-    description: 'Atur Massa = 5 kg. Buat lintasan dengan minimal 3 Lembah, 2 Turun, dan 3 Naik, lalu selesaikan lintasannya!',
+    title: 'Tantangan #2: Lintasan Variasi',
+    // UPDATE DISINI: Deskripsi sesuai request
+    description: 'Atur Massa = 7.5 kg. Buat lintasan: min 1 Datar, 2 Naik, 1 Lembah, 1 Turun, dan 1 Bukit. Selesaikan lintasannya!',
   },
 ];
 
@@ -22,11 +23,7 @@ export default function ChallengeScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      // 1. Load data progress saat buka halaman
       loadProgress();
-      
-      // 2. Auto-Reset: Setiap buka halaman ini, batalkan tantangan aktif
-      // supaya kalau masuk Lab lagi, tidak langsung muncul tantangan.
       resetActiveChallenge();
     }, [])
   );
@@ -88,7 +85,7 @@ export default function ChallengeScreen() {
               
               {isCompleted && (
                 <View style={styles.badgeContainer}>
-                  <Text style={styles.badgeText}>✅ Selesai</Text>
+                  <Text style={styles.badgeText}>Selesai</Text>
                 </View>
               )}
 
@@ -120,7 +117,6 @@ export default function ChallengeScreen() {
   );
 }
 
-// --- STYLES (Sudah dirapikan ke bawah) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -155,7 +151,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 2,
     borderColor: '#bbdefb',
-    // Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
