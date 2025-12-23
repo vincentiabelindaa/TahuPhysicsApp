@@ -140,7 +140,7 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8',
+    backgroundColor: '#f0f8ff',
   },
   scrollContent: {
     padding: 20,
@@ -151,6 +151,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 25,
+    borderColor: '#bbdefb',
+    borderWidth: 2,
     // Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
@@ -204,7 +206,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     // Shadow Button
-    shadowColor: '#4BA3EB',
+    shadowColor: '#040404ff',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 5,
