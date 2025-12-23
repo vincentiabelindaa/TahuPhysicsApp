@@ -6,13 +6,14 @@ import { EmailAuthProvider, reauthenticateWithCredential, signOut, updatePasswor
 import { doc, getDoc, updateDoc } from 'firebase/firestore'; 
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context'; // Wajib import SafeAreaView buat custom header
 
 export default function ProfileScreen() {
-  const theme = Colors.light || { background: '#fff', primary: '#0d47a1', secondary: '#42a5f5', cardBorder: '#bbdefb', danger: '#ffebee' };
+  const theme = Colors.light || { background: '#f0f2f5', primary: '#0d47a1', secondary: '#42a5f5', cardBorder: '#bbdefb', danger: '#ffebee' };
   const router = useRouter(); 
 
   // --- STATE ---
-  const [name, setName] = useState(''); // Awalnya kosong dulu gapapa
+  const [name, setName] = useState(''); 
   const [email, setEmail] = useState(''); 
   
   // State Password
@@ -20,18 +21,13 @@ export default function ProfileScreen() {
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
   
-  // Kita HAPUS loadingData yang memblokir layar
   const [loadingPass, setLoadingPass] = useState(false); 
 
-  // --- 1. AMBIL DATA (Non-Blocking) ---
+  // --- 1. AMBIL DATA ---
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
-      // Langsung set email karena datanya udah ada di HP (Auth)
       setEmail(user.email || ''); 
-      
-      // Ambil Nama dari Firestore di background
-      // Gak perlu loading spinner satu layar
       getDoc(doc(db, "users", user.uid)).then((docSnap) => {
         if (docSnap.exists()) {
           setName(docSnap.data().name || '');
@@ -40,27 +36,20 @@ export default function ProfileScreen() {
     }
   }, []);
 
-  // --- 2. UPDATE PROFIL "TURBO" (Tanpa Loading) ---
+  // --- 2. UPDATE PROFIL ---
   const handleUpdateProfile = () => {
     if (!name.trim()) {
         Alert.alert("Gagal", "Nama tidak boleh kosong.");
         return;
     }
-
     const user = auth.currentUser;
     if (user) {
-        // KIRIM DI BACKGROUND (Fire & Forget)
-        // Gak pake 'await', gak pake loading spinner
-        updateDoc(doc(db, "users", user.uid), {
-            name: name
-        });
-
-        // Langsung kasih feedback instan ke user
+        updateDoc(doc(db, "users", user.uid), { name: name });
         Alert.alert("Sukses", "Profil berhasil diperbarui!");
     }
   };
 
-  // --- 3. GANTI PASSWORD (Tetap butuh Loading karena krusial) ---
+  // --- 3. GANTI PASSWORD ---
   const handleChangePassword = async () => {
     if (!oldPass || !newPass || !confirmPass) {
         Alert.alert("Error", "Semua kolom password harus diisi.");
@@ -99,49 +88,34 @@ export default function ProfileScreen() {
 
   // --- 4. LOGOUT ---
   const handleLogout = () => {
-      Alert.alert(
-          "Keluar",
-          "Yakin ingin keluar akun?",
-          [
-              { text: "Batal", style: "cancel" },
-              { 
-                  text: "Ya, Keluar", 
-                  style: 'destructive',
-                  onPress: () => {
-                      // SignOut juga fire & forget aja biar cepet
-                      signOut(auth);
-                      router.replace('/login'); 
-                  }
-              }
-          ]
-      );
+      Alert.alert("Keluar", "Yakin ingin keluar akun?", [
+          { text: "Batal", style: "cancel" },
+          { text: "Ya, Keluar", style: 'destructive', onPress: () => { signOut(auth); router.replace('/login'); } }
+      ]);
   };
 
   return (
-    <>
-      <Stack.Screen options={{ 
-        title: 'Profil Saya',
-        headerTitleAlign: 'left', 
-        headerBackVisible: false, 
-        headerShadowVisible: false, 
-        headerTitleStyle: { fontSize: 19, fontWeight: 'bold' },
-        headerStyle: { 
-            backgroundColor: theme.background,
-            borderBottomWidth: 1,
-            borderBottomColor: '#e0e0e0', 
-        },
-        headerSafeAreaInsets: { top: 70 }, 
-        headerTintColor: theme.primary,
-        headerLeft: () => (
-          <TouchableOpacity 
-            onPress={() => router.back()} 
-            style={{ marginRight: 15, padding: 5, justifyContent: 'center', alignItems: 'center' }}>
-             <Ionicons name="chevron-back" size={24} color={theme.primary} />
-          </TouchableOpacity>
-        ),
-      }} />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#f0f2f5' }} edges={['top', 'left', 'right']}>
+      
+      {/* 1. MATIKAN HEADER BAWAAN */}
+      <Stack.Screen options={{ headerShown: false }} />
 
-      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
+      {/* 2. HEADER CUSTOM (KOTAK PUTIH / CARD) */}
+      <View style={styles.customHeader}>
+         <TouchableOpacity 
+            onPress={() => router.back()} 
+            style={styles.backButton}
+         >
+             <Ionicons name="arrow-back" size={24} color={theme.primary} />
+         </TouchableOpacity>
+         
+         <Text style={styles.headerTitleText}>Profil Saya</Text>
+         
+         {/* View kosong di kanan biar judul pas di tengah (optional) */}
+         <View style={{ width: 40 }} />
+      </View>
+
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         
         {/* --- KARTU 1: INFORMASI AKUN --- */}
         <View style={styles.card}>
@@ -164,7 +138,6 @@ export default function ProfileScreen() {
             editable={false} 
           />
 
-          {/* Tombol Update gak pake loading lagi, langsung gas */}
           <TouchableOpacity 
             style={[styles.button, { backgroundColor: theme.secondary }]}
             onPress={handleUpdateProfile}
@@ -204,7 +177,6 @@ export default function ProfileScreen() {
             secureTextEntry={true}
           />
 
-          {/* Tombol Ganti Password tetap butuh loading karena sensitif */}
           <TouchableOpacity 
             style={[styles.button, { backgroundColor: theme.secondary }]}
             onPress={handleChangePassword}
@@ -230,15 +202,42 @@ export default function ProfileScreen() {
         </View>
 
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  // --- STYLE HEADER CUSTOM (KOTAK PUTIH) ---
+  customHeader: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // Biar tombol back kiri, judul tengah
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    // Bikin efek Card/Kotak Timbul
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 4, // Shadow buat Android
+    zIndex: 10,   // Biar dia ada di atas scrollview
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  backButton: {
+    padding: 5,
+  },
+  headerTitleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#0d47a1',
+  },
+
+  // --- STYLE KONTEN ---
+  scrollContent: {
     flexGrow: 1,
     padding: 20,
-    paddingTop: 20, 
   },
   card: {
     backgroundColor: 'white',
@@ -249,7 +248,7 @@ const styles = StyleSheet.create({
     borderColor: '#bbdefb',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 2,
   },

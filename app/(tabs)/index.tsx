@@ -1,35 +1,60 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Link } from 'expo-router';
-import React from 'react';
+import { Link, useFocusEffect } from 'expo-router'; 
+import React, { useState, useCallback } from 'react'; 
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { auth, db } from '@/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
 
-// --- PALET WARNA "SOFT VIBRANT" (Tidak Pucat, Tidak Ngejreng) ---
+// --- PALET WARNA "SOFT VIBRANT" ---
 const colors = {
-  // Warna Tombol (Lebih hidup, support teks putih)
-  blueBtn: '#4BA3EB',    // Soft Blue
-  mintBtn: '#4DB6AC',    // Soft Teal
-  orangeBtn: '#FF9F43',  // Soft Orange
-  purpleBtn: '#A55EEA',  // Soft Violet
-
-  // Warna Background Icon/Badge (Tetap sangat muda biar kontras)
-  blueBg: '#EDF7FF',     
-  mintBg: '#EDF9F8',     
-  orangeBg: '#FFF5EB',    
-  purpleBg: '#F6F0FD',   
-
-  btnText: '#FFFFFF',    // BALIK KE PUTIH (Kunci biar terlihat aktif)
+  blueBtn: '#4BA3EB',
+  mintBtn: '#4DB6AC',
+  orangeBtn: '#FF9F43',
+  purpleBtn: '#A55EEA',
+  
+  blueBg: '#EDF7FF',
+  mintBg: '#EDF9F8',
+  orangeBg: '#FFF5EB',
+  purpleBg: '#F6F0FD',
+  
+  btnText: '#FFFFFF',
 };
 
 export default function HomeScreen() {
+  const [displayName, setDisplayName] = useState('Sobat Fisika'); 
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchUserName = async () => {
+        const user = auth.currentUser;
+        if (user) {
+          try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists() && docSnap.data().name) {
+              setDisplayName(docSnap.data().name);
+            } else {
+              setDisplayName(user.email?.split('@')[0] || 'Sobat Fisika');
+            }
+          } catch (error) {
+            console.log("Gagal ambil nama:", error);
+          }
+        }
+      };
+      fetchUserName();
+    }, [])
+  );
+
   return (
     <SafeAreaView 
       edges={['top', 'left', 'right']}
-      style={{ flex: 1, backgroundColor: '#f0f8ff' }} // Background sedikit lebih bersih
+      style={{ flex: 1, backgroundColor: '#f0f8ff' }}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
-        {/* --- HEADER (ORIGINAL) --- */}
+        {/* --- HEADER --- */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
             <Image 
@@ -38,7 +63,7 @@ export default function HomeScreen() {
             />
             <View>
               <Text style={styles.headerTitle}>TahuPhysics</Text>
-              <Text style={styles.headerSubtitle}>Halo, Selamat Datang!👋</Text>
+              <Text style={styles.headerSubtitle}>Hai, welcome {displayName}!👋</Text>
             </View>
           </View>
           <Link href="/profile" asChild>
@@ -57,7 +82,7 @@ export default function HomeScreen() {
           
           <View style={styles.cardContainer}>
             
-            {/* Kartu 1: Playlist (Soft Blue) */}
+            {/* Kartu 1: Playlist */}
             <View style={styles.card}>
               <View style={styles.cardRow}>
                 <View style={styles.cardTextContent}>
@@ -67,18 +92,20 @@ export default function HomeScreen() {
                    <Text style={styles.cardTitle}>Materi Playlist</Text>
                    <Text style={styles.cardDesc}>Tonton video pembelajaran interaktif konsep Usaha dan Energi.</Text>
                 </View>
-                <Ionicons name="play-circle-outline" size={80} color={colors.blueBg} style={styles.bgIcon} />
+                
+                {/* PERBAIKAN: Pakai warna 'blueBtn' biar jelas, nanti di-transparan lewat style */}
+                <Ionicons name="play-circle-outline" size={80} color={colors.blueBtn} style={styles.bgIcon} />
+                
               </View>
               <Link href="/playlist" asChild>
                 <TouchableOpacity style={styles.btnBlue}>
                   <Text style={styles.actionButtonText}>Lihat Materi</Text>
-                  {/* Ikon panah putih */}
                   <Ionicons name="arrow-forward" size={16} color={colors.btnText} />
                 </TouchableOpacity>
               </Link>
             </View>
 
-            {/* Kartu 2: Virtual Lab (Soft Teal) */}
+            {/* Kartu 2: Virtual Lab */}
             <View style={styles.card}>
               <View style={styles.cardRow}>
                 <View style={styles.cardTextContent}>
@@ -88,7 +115,10 @@ export default function HomeScreen() {
                    <Text style={styles.cardTitle}>Virtual Lab</Text>
                    <Text style={styles.cardDesc}>Simulasikan energi kinetik & potensial secara interaktif.</Text>
                 </View>
-                <Ionicons name="flask-outline" size={80} color={colors.mintBg} style={styles.bgIcon} />
+                
+                {/* PERBAIKAN: Pakai warna 'mintBtn' */}
+                <Ionicons name="flask-outline" size={80} color={colors.mintBtn} style={styles.bgIcon} />
+                
               </View>
               <Link href="/lab" asChild>
                 <TouchableOpacity style={styles.btnMint}>
@@ -98,7 +128,7 @@ export default function HomeScreen() {
               </Link>
             </View>
             
-            {/* Kartu 3: Quiz (Soft Orange) */}
+            {/* Kartu 3: Quiz */}
             <View style={styles.card}>
               <View style={styles.cardRow}>
                 <View style={styles.cardTextContent}>
@@ -108,7 +138,10 @@ export default function HomeScreen() {
                    <Text style={styles.cardTitle}>Quiz</Text>
                    <Text style={styles.cardDesc}>Tes kemampuanmu melalui kuis interaktif.</Text>
                 </View>
-                <Ionicons name="school-outline" size={80} color={colors.orangeBg} style={styles.bgIcon} />
+                
+                {/* PERBAIKAN: Pakai warna 'orangeBtn' */}
+                <Ionicons name="school-outline" size={80} color={colors.orangeBtn} style={styles.bgIcon} />
+                
               </View>
               <Link href="/quiz" asChild>
                 <TouchableOpacity style={styles.btnOrange}>
@@ -118,17 +151,20 @@ export default function HomeScreen() {
               </Link>
             </View>
 
-            {/* Kartu 4: Challenge (Soft Violet) */}
+            {/* Kartu 4: Challenge */}
             <View style={styles.card}>
               <View style={styles.cardRow}>
-                 <View style={styles.cardTextContent}>
-                   <View style={[styles.iconBadge, { backgroundColor: colors.purpleBg }]}>
+                  <View style={styles.cardTextContent}>
+                    <View style={[styles.iconBadge, { backgroundColor: colors.purpleBg }]}>
                       <Ionicons name="trophy" size={24} color={colors.purpleBtn} />
-                   </View>
-                   <Text style={styles.cardTitle}>Tantangan</Text>
-                   <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan melalui Virtual Lab.</Text>
-                </View>
-                <Ionicons name="trophy-outline" size={80} color={colors.purpleBg} style={styles.bgIcon} />
+                    </View>
+                    <Text style={styles.cardTitle}>Tantangan</Text>
+                    <Text style={styles.cardDesc}>Uji pemahamanmu dengan tantangan melalui Virtual Lab.</Text>
+                  </View>
+                
+                {/* PERBAIKAN: Pakai warna 'purpleBtn' */}
+                <Ionicons name="trophy-outline" size={80} color={colors.purpleBtn} style={styles.bgIcon} />
+                
               </View>
               <Link href="/challenge" asChild>
                 <TouchableOpacity style={styles.btnPurple}>
@@ -164,7 +200,7 @@ const styles = StyleSheet.create({
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
   logo: { width: 70, height: 45, borderRadius: 0, marginRight: 15 },
   headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#0d47a1' },
-  headerSubtitle: { fontSize: 14, color: '#666' },
+  headerSubtitle: { fontSize: 14, color: '#666', marginTop: 2 },
   mainContent: { padding: 20 },
   sectionTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 5, color: '#333' },
   sectionDesc: { fontSize: 14, color: '#666', marginBottom: 20, lineHeight: 20 },
@@ -175,7 +211,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 16, 
     padding: 15,
-    // Shadow sedikit lebih tegas dari sebelumnya
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -201,25 +236,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
+  
+  // --- PERBAIKAN UTAMA DI SINI ---
   bgIcon: {
     position: 'absolute',
     right: -15,
     top: -10,
-    opacity: 100, // Sedikit lebih terlihat
-    transform: [{ rotate: '-10deg' }, { scale: 1.1 }] // Sedikit lebih besar
+    // Opacity 0.2 artinya 20% terlihat.
+    // Karena kita pakai warna 'Btn' yang ngejreng, 20% nya bakal jadi watermark yang pas dan jelas.
+    opacity: 0.2, 
+    transform: [{ rotate: '-10deg' }, { scale: 1.1 }] 
   },
+
   cardTitle: { fontSize: 18, fontWeight: 'bold', color: '#333', marginBottom: 4 },
   cardDesc: { fontSize: 13, color: '#777', lineHeight: 18 },
 
-  // --- TOMBOL SOFT VIBRANT ---
-  // Teks tombol KEMBALI PUTIH
+  // --- TOMBOL ---
   actionButtonText: {
     color: colors.btnText,
     fontWeight: '700',
     fontSize: 14,
   },
-  
-  // Warna-warni Soft Vibrant
   btnBlue: {
     backgroundColor: colors.blueBtn, 
     flexDirection: 'row', justifyContent: 'center', alignItems: 'center',
