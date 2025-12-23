@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   headerLeft: { flexDirection: 'row', alignItems: 'center' },
-  logo: { width: 50, height: 50, borderRadius: 25, marginRight: 15 },
+  logo: { width: 70, height: 45, borderRadius: 0, marginRight: 15 },
   headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#0d47a1' },
   headerSubtitle: { fontSize: 14, color: '#666' },
   mainContent: { padding: 20 },

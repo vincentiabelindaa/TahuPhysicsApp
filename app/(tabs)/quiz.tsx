@@ -506,13 +506,19 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  // --- INI STYLE YG DIUBAH (BIAR JADI TOMBOL) ---
   navBtnSecondary: {
-    padding: 10,
+    backgroundColor: '#9e9e9e', // Warna abu-abu tombol
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    alignSelf: 'flex-start',
   },
   navBtnTextSec: {
-    color: '#666',
-    fontWeight: '600',
+    color: '#fff', // Teks jadi putih
+    fontWeight: 'bold',
   },
+  // ----------------------------------------------
   checkBtn: {
     backgroundColor: '#4caf50',
     paddingVertical: 10,

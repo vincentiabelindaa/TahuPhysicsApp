@@ -1,8 +1,8 @@
+import { Colors } from '@/constants/theme';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Stack, useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import { Stack, useRouter } from 'expo-router'; 
-import { Colors } from '@/constants/theme'; 
-import Ionicons from '@expo/vector-icons/Ionicons'; 
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
   const theme = Colors.light;
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#bbdefb',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
