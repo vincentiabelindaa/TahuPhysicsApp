@@ -96,7 +96,7 @@ export default function PlaylistScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f8ff',
   },
   // --- HEADER STYLE (Sama dengan file lain) ---
   header: {
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#bbdefb',
   },
   sectionHeader: {
     fontSize: 16,

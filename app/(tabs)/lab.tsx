@@ -444,7 +444,7 @@ export default function LabScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8f9fa' },
+  container: { flex: 1, backgroundColor: '#f0f8ff' },
   header: { padding: 20, paddingTop: 60, backgroundColor: '#fff', borderBottomWidth: 1, borderBottomColor: '#eee' },
   headerTitle: { fontSize: 24, fontWeight: 'bold', color: '#0d47a1', marginBottom: 5 },
   headerSubtitle: { fontSize: 14, color: '#666', lineHeight: 20 },

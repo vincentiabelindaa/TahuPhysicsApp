@@ -386,7 +386,7 @@ export default function QuizScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f8ff',
   },
   header: {
     padding: 20,
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#bbdefb',
     elevation: 2,
   },
   questionText: {

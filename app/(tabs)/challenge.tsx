@@ -120,7 +120,7 @@ export default function ChallengeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f8ff',
   },
   header: {
     padding: 20,
