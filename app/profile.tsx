@@ -18,16 +18,45 @@ export default function ProfileScreen() {
     <>
       <Stack.Screen options={{ 
         title: 'Profil Saya',
-        headerStyle: { backgroundColor: theme.background },
+        
+        // 1. POSISI TETAP DI KIRI (Sesuai request)
+        headerTitleAlign: 'left', 
+        
+        // 2. STYLE JUDUL (Biar lebih besar & tebal dikit)
+        headerTitleStyle: {
+           fontSize: 19,
+           fontWeight: 'bold',
+        
+        },
+
+        // 3. ATUR TINGGI HEADER (Biar garisnya turun)
+        headerStyle: { 
+            backgroundColor: theme.background,
+            elevation: 0, 
+            shadowOpacity: 0, 
+            borderBottomWidth: 1,
+            borderBottomColor: '#e0e0e0', // Warna garis
+        },
+
+        // 4. DORONG TEKS & IKON KE BAWAH
+        // Ini kuncinya biar tulisan gak nempel di atas (jam)
+        headerSafeAreaInsets: { top: 70 }, 
+
         headerTintColor: theme.primary,
-        // --- BAGIAN INI YANG DIGANTI ---
+        
         headerLeft: () => (
-          <TouchableOpacity onPress={() => router.back()} style={{ marginRight: 15, padding: 5 }}>
-             {/* Ganti jadi 'chevron-back' supaya lebih cocok untuk iPhone & Android */}
-             <Ionicons name="chevron-back" size={28} color={theme.primary} />
+          <TouchableOpacity 
+            onPress={() => router.back()} 
+            style={{ 
+                marginRight: 15, 
+                padding: 5,
+                justifyContent: 'center',
+                alignItems: 'center'
+            }}>
+             {/* Ikon Back */}
+             <Ionicons name="chevron-back" size={24} color={theme.primary} />
           </TouchableOpacity>
         ),
-        // -------------------------------
       }} />
 
       <ScrollView contentContainerStyle={[styles.container, { backgroundColor: theme.background }]}>
@@ -110,6 +139,8 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    // Karena header sudah tinggi, padding atas konten bisa standar aja
+    paddingTop: 20, 
   },
   card: {
     backgroundColor: 'white',
