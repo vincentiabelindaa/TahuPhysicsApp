@@ -1,12 +1,24 @@
-import { auth, db } from '@/firebaseConfig'; 
 import { Colors } from '@/constants/theme';
+import { auth, db } from '@/firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Stack, useRouter } from 'expo-router';
-import { EmailAuthProvider, reauthenticateWithCredential, signOut, updatePassword } from 'firebase/auth'; 
-import { doc, getDoc, updateDoc } from 'firebase/firestore'; 
+import { EmailAuthProvider, reauthenticateWithCredential, signOut, updatePassword } from 'firebase/auth';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context'; // Wajib import SafeAreaView buat custom header
+import {
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView, // <--- 1. IMPORT INI
+  Platform // <--- 2. IMPORT INI
+  ,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
   const theme = Colors.light || { background: '#f0f2f5', primary: '#0d47a1', secondary: '#42a5f5', cardBorder: '#bbdefb', danger: '#ffebee' };
@@ -16,7 +28,6 @@ export default function ProfileScreen() {
   const [name, setName] = useState(''); 
   const [email, setEmail] = useState(''); 
   
-  // State Password
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
@@ -90,138 +101,142 @@ export default function ProfileScreen() {
   const handleLogout = () => {
       Alert.alert("Keluar", "Yakin ingin keluar akun?", [
           { text: "Batal", style: "cancel" },
-          { text: "Ya, Keluar", style: 'destructive', onPress: () => { signOut(auth); router.replace('/login'); } }
+          { text: "Ya, Keluar", style: 'destructive', onPress: () => { signOut(auth); router.replace('/'); } }
       ]);
   };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#f0f2f5' }} edges={['top', 'left', 'right']}>
       
-      {/* 1. MATIKAN HEADER BAWAAN */}
       <Stack.Screen options={{ headerShown: false }} />
 
-      {/* 2. HEADER CUSTOM (KOTAK PUTIH / CARD) */}
+      {/* HEADER TETAP DI ATAS */}
       <View style={styles.customHeader}>
-         <TouchableOpacity 
-            onPress={() => router.back()} 
-            style={styles.backButton}
-         >
+         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
              <Ionicons name="arrow-back" size={24} color={theme.primary} />
          </TouchableOpacity>
-         
          <Text style={styles.headerTitleText}>Profil Saya</Text>
-         
-         {/* View kosong di kanan biar judul pas di tengah (optional) */}
          <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        
-        {/* --- KARTU 1: INFORMASI AKUN --- */}
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
-            Informasi Akun
-          </Text>
-
-          <Text style={styles.label}>Nama Lengkap:</Text>
-          <TextInput 
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            placeholder="Memuat nama..." 
-          />
-
-          <Text style={styles.label}>Email:</Text>
-          <TextInput 
-            style={[styles.input, styles.readOnly]} 
-            value={email}
-            editable={false} 
-          />
-
-          <TouchableOpacity 
-            style={[styles.button, { backgroundColor: theme.secondary }]}
-            onPress={handleUpdateProfile}
-          >
-            <Text style={styles.buttonText}>Update Profil</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* --- KARTU 2: GANTI PASSWORD --- */}
-        <View style={styles.card}>
-          <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
-            Ganti Password
-          </Text>
-
-          <Text style={styles.label}>Password Saat Ini:</Text>
-          <TextInput 
-            style={styles.input}
-            value={oldPass}
-            onChangeText={setOldPass}
-            secureTextEntry={true} 
-            placeholder='Wajib diisi utk verifikasi'
-          />
-
-          <Text style={styles.label}>Password Baru (min. 6 karakter):</Text>
-          <TextInput 
-            style={styles.input}
-            value={newPass}
-            onChangeText={setNewPass}
-            secureTextEntry={true}
-          />
-
-          <Text style={styles.label}>Konfirmasi Password Baru:</Text>
-          <TextInput 
-            style={styles.input}
-            value={confirmPass}
-            onChangeText={setConfirmPass}
-            secureTextEntry={true}
-          />
-
-          <TouchableOpacity 
-            style={[styles.button, { backgroundColor: theme.secondary }]}
-            onPress={handleChangePassword}
-            disabled={loadingPass}
-          >
-             {loadingPass ? (
-                <ActivityIndicator color="#fff" />
-            ) : (
-                <Text style={styles.buttonText}>Ganti Password</Text>
-            )}
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity 
-            style={[styles.logoutButton, { backgroundColor: theme.danger }]}
-            onPress={handleLogout}
+      {/* 3. BUNGKUS SCROLLVIEW DENGAN KEYBOARDAVOIDINGVIEW */}
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+      >
+        {/* 4. TAMBAHKAN style={{ flex: 1 }} DI SCROLLVIEW */}
+        <ScrollView 
+            style={{ flex: 1 }} 
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
         >
-            <Text style={[styles.logoutText, { color: '#c62828' }]}>Keluar (Logout)</Text>
-        </TouchableOpacity>
+        
+          {/* --- KARTU 1: INFORMASI AKUN --- */}
+          <View style={styles.card}>
+            <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
+              Informasi Akun
+            </Text>
 
-        <View style={styles.footer}>
-           <Text style={styles.footerText}>© 2025 IndiBelin | All rights reserved</Text>
-        </View>
+            <Text style={styles.label}>Nama Lengkap:</Text>
+            <TextInput 
+              style={styles.input}
+              value={name}
+              onChangeText={setName}
+              placeholder="Memuat nama..." 
+            />
 
-      </ScrollView>
+            <Text style={styles.label}>Email:</Text>
+            <TextInput 
+              style={[styles.input, styles.readOnly]} 
+              value={email}
+              editable={false} 
+            />
+
+            <TouchableOpacity 
+              style={[styles.button, { backgroundColor: theme.secondary }]}
+              onPress={handleUpdateProfile}
+            >
+              <Text style={styles.buttonText}>Update Profil</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* --- KARTU 2: GANTI PASSWORD --- */}
+          <View style={styles.card}>
+            <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
+              Ganti Password
+            </Text>
+
+            <Text style={styles.label}>Password Saat Ini:</Text>
+            <TextInput 
+              style={styles.input}
+              value={oldPass}
+              onChangeText={setOldPass}
+              secureTextEntry={true} 
+              placeholder='Wajib diisi utk verifikasi'
+            />
+
+            <Text style={styles.label}>Password Baru (min. 6 karakter):</Text>
+            <TextInput 
+              style={styles.input}
+              value={newPass}
+              onChangeText={setNewPass}
+              secureTextEntry={true}
+            />
+
+            <Text style={styles.label}>Konfirmasi Password Baru:</Text>
+            <TextInput 
+              style={styles.input}
+              value={confirmPass}
+              onChangeText={setConfirmPass}
+              secureTextEntry={true}
+            />
+
+            <TouchableOpacity 
+              style={[styles.button, { backgroundColor: theme.secondary }]}
+              onPress={handleChangePassword}
+              disabled={loadingPass}
+            >
+               {loadingPass ? (
+                 <ActivityIndicator color="#fff" />
+              ) : (
+                 <Text style={styles.buttonText}>Ganti Password</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity 
+              style={[styles.logoutButton, { backgroundColor: theme.danger }]}
+              onPress={handleLogout}
+          >
+              <Text style={[styles.logoutText, { color: '#c62828' }]}>Keluar (Logout)</Text>
+          </TouchableOpacity>
+
+          <View style={styles.footer}>
+             <Text style={styles.footerText}>© 2025 IndiBelin | All rights reserved</Text>
+          </View>
+
+        </ScrollView>
+      </KeyboardAvoidingView>
+
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  // --- STYLE HEADER CUSTOM (KOTAK PUTIH) ---
+  // --- STYLE HEADER CUSTOM ---
   customHeader: {
     backgroundColor: '#fff',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between', // Biar tombol back kiri, judul tengah
+    justifyContent: 'space-between', 
     paddingHorizontal: 20,
     paddingVertical: 15,
-    // Bikin efek Card/Kotak Timbul
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 4, // Shadow buat Android
-    zIndex: 10,   // Biar dia ada di atas scrollview
+    elevation: 4, 
+    zIndex: 10,  
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
   },
@@ -238,6 +253,7 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexGrow: 1,
     padding: 20,
+    paddingBottom: 50, // Tambahan padding bawah biar enak scroll mentoknya
   },
   card: {
     backgroundColor: 'white',
