@@ -1,59 +1,141 @@
+import { auth, db } from '@/firebaseConfig'; 
 import { Colors } from '@/constants/theme';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Stack, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { EmailAuthProvider, reauthenticateWithCredential, signOut, updatePassword } from 'firebase/auth'; 
+import { doc, getDoc, updateDoc } from 'firebase/firestore'; 
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function ProfileScreen() {
-  const theme = Colors.light;
+  const theme = Colors.light || { background: '#fff', primary: '#0d47a1', secondary: '#42a5f5', cardBorder: '#bbdefb', danger: '#ffebee' };
   const router = useRouter(); 
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('belindaaa@gmail.com'); 
+  // --- STATE ---
+  const [name, setName] = useState(''); // Awalnya kosong dulu gapapa
+  const [email, setEmail] = useState(''); 
+  
+  // State Password
   const [oldPass, setOldPass] = useState('');
   const [newPass, setNewPass] = useState('');
   const [confirmPass, setConfirmPass] = useState('');
+  
+  // Kita HAPUS loadingData yang memblokir layar
+  const [loadingPass, setLoadingPass] = useState(false); 
+
+  // --- 1. AMBIL DATA (Non-Blocking) ---
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      // Langsung set email karena datanya udah ada di HP (Auth)
+      setEmail(user.email || ''); 
+      
+      // Ambil Nama dari Firestore di background
+      // Gak perlu loading spinner satu layar
+      getDoc(doc(db, "users", user.uid)).then((docSnap) => {
+        if (docSnap.exists()) {
+          setName(docSnap.data().name || '');
+        }
+      });
+    }
+  }, []);
+
+  // --- 2. UPDATE PROFIL "TURBO" (Tanpa Loading) ---
+  const handleUpdateProfile = () => {
+    if (!name.trim()) {
+        Alert.alert("Gagal", "Nama tidak boleh kosong.");
+        return;
+    }
+
+    const user = auth.currentUser;
+    if (user) {
+        // KIRIM DI BACKGROUND (Fire & Forget)
+        // Gak pake 'await', gak pake loading spinner
+        updateDoc(doc(db, "users", user.uid), {
+            name: name
+        });
+
+        // Langsung kasih feedback instan ke user
+        Alert.alert("Sukses", "Profil berhasil diperbarui!");
+    }
+  };
+
+  // --- 3. GANTI PASSWORD (Tetap butuh Loading karena krusial) ---
+  const handleChangePassword = async () => {
+    if (!oldPass || !newPass || !confirmPass) {
+        Alert.alert("Error", "Semua kolom password harus diisi.");
+        return;
+    }
+    if (newPass.length < 6) {
+        Alert.alert("Error", "Password baru minimal 6 karakter.");
+        return;
+    }
+    if (newPass !== confirmPass) {
+        Alert.alert("Error", "Konfirmasi password tidak cocok.");
+        return;
+    }
+
+    setLoadingPass(true);
+    try {
+        const user = auth.currentUser;
+        if (user && user.email) {
+            const credential = EmailAuthProvider.credential(user.email, oldPass);
+            await reauthenticateWithCredential(user, credential);
+            await updatePassword(user, newPass);
+            
+            Alert.alert("Sukses", "Password berhasil diganti. Silakan login ulang.");
+            setOldPass('');
+            setNewPass('');
+            setConfirmPass('');
+        }
+    } catch (error: any) {
+        let msg = "Gagal mengganti password.";
+        if (error.code === 'auth/wrong-password') msg = "Password saat ini salah.";
+        Alert.alert("Gagal", msg);
+    } finally {
+        setLoadingPass(false);
+    }
+  };
+
+  // --- 4. LOGOUT ---
+  const handleLogout = () => {
+      Alert.alert(
+          "Keluar",
+          "Yakin ingin keluar akun?",
+          [
+              { text: "Batal", style: "cancel" },
+              { 
+                  text: "Ya, Keluar", 
+                  style: 'destructive',
+                  onPress: () => {
+                      // SignOut juga fire & forget aja biar cepet
+                      signOut(auth);
+                      router.replace('/login'); 
+                  }
+              }
+          ]
+      );
+  };
 
   return (
     <>
       <Stack.Screen options={{ 
         title: 'Profil Saya',
-        
-        // 1. POSISI TETAP DI KIRI (Sesuai request)
         headerTitleAlign: 'left', 
-        
-        // 2. STYLE JUDUL (Biar lebih besar & tebal dikit)
-        headerTitleStyle: {
-           fontSize: 19,
-           fontWeight: 'bold',
-        
-        },
-
-        // 3. ATUR TINGGI HEADER (Biar garisnya turun)
+        headerBackVisible: false, 
+        headerShadowVisible: false, 
+        headerTitleStyle: { fontSize: 19, fontWeight: 'bold' },
         headerStyle: { 
             backgroundColor: theme.background,
-            elevation: 0, 
-            shadowOpacity: 0, 
             borderBottomWidth: 1,
-            borderBottomColor: '#e0e0e0', // Warna garis
+            borderBottomColor: '#e0e0e0', 
         },
-
-        // 4. DORONG TEKS & IKON KE BAWAH
-        // Ini kuncinya biar tulisan gak nempel di atas (jam)
         headerSafeAreaInsets: { top: 70 }, 
-
         headerTintColor: theme.primary,
-        
         headerLeft: () => (
           <TouchableOpacity 
             onPress={() => router.back()} 
-            style={{ 
-                marginRight: 15, 
-                padding: 5,
-                justifyContent: 'center',
-                alignItems: 'center'
-            }}>
-             {/* Ikon Back */}
+            style={{ marginRight: 15, padding: 5, justifyContent: 'center', alignItems: 'center' }}>
              <Ionicons name="chevron-back" size={24} color={theme.primary} />
           </TouchableOpacity>
         ),
@@ -72,7 +154,7 @@ export default function ProfileScreen() {
             style={styles.input}
             value={name}
             onChangeText={setName}
-            placeholder="Masukkan nama lengkap"
+            placeholder="Memuat nama..." 
           />
 
           <Text style={styles.label}>Email:</Text>
@@ -82,7 +164,11 @@ export default function ProfileScreen() {
             editable={false} 
           />
 
-          <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]}>
+          {/* Tombol Update gak pake loading lagi, langsung gas */}
+          <TouchableOpacity 
+            style={[styles.button, { backgroundColor: theme.secondary }]}
+            onPress={handleUpdateProfile}
+          >
             <Text style={styles.buttonText}>Update Profil</Text>
           </TouchableOpacity>
         </View>
@@ -99,6 +185,7 @@ export default function ProfileScreen() {
             value={oldPass}
             onChangeText={setOldPass}
             secureTextEntry={true} 
+            placeholder='Wajib diisi utk verifikasi'
           />
 
           <Text style={styles.label}>Password Baru (min. 6 karakter):</Text>
@@ -117,12 +204,24 @@ export default function ProfileScreen() {
             secureTextEntry={true}
           />
 
-          <TouchableOpacity style={[styles.button, { backgroundColor: theme.secondary }]}>
-            <Text style={styles.buttonText}>Ganti Password</Text>
+          {/* Tombol Ganti Password tetap butuh loading karena sensitif */}
+          <TouchableOpacity 
+            style={[styles.button, { backgroundColor: theme.secondary }]}
+            onPress={handleChangePassword}
+            disabled={loadingPass}
+          >
+             {loadingPass ? (
+                <ActivityIndicator color="#fff" />
+            ) : (
+                <Text style={styles.buttonText}>Ganti Password</Text>
+            )}
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={[styles.logoutButton, { backgroundColor: theme.danger }]}>
+        <TouchableOpacity 
+            style={[styles.logoutButton, { backgroundColor: theme.danger }]}
+            onPress={handleLogout}
+        >
             <Text style={[styles.logoutText, { color: '#c62828' }]}>Keluar (Logout)</Text>
         </TouchableOpacity>
 
@@ -139,7 +238,6 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
-    // Karena header sudah tinggi, padding atas konten bisa standar aja
     paddingTop: 20, 
   },
   card: {
