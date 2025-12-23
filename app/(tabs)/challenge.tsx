@@ -111,7 +111,7 @@ export default function ChallengeScreen() {
           );
         })}
         
-        <Text style={styles.footerText}>© 2025 TahuPhysics Mobile</Text>
+        <Text style={styles.footerText}>© 2025 IndiBelin | All rights reserved</Text>
       </ScrollView>
     </View>
   );
