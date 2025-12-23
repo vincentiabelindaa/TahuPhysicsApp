@@ -25,7 +25,7 @@ export default function HomeScreen() {
   return (
     <SafeAreaView 
       edges={['top', 'left', 'right']}
-      style={{ flex: 1, backgroundColor: '#F8F9FA' }} // Background sedikit lebih bersih
+      style={{ flex: 1, backgroundColor: '#f0f8ff' }} // Background sedikit lebih bersih
     >
       <ScrollView contentContainerStyle={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         
