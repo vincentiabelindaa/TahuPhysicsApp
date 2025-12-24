@@ -172,7 +172,6 @@ export default function ProfileScreen() {
               value={oldPass}
               onChangeText={setOldPass}
               secureTextEntry={true} 
-              placeholder='Wajib diisi utk verifikasi'
             />
 
             <Text style={styles.label}>Password Baru (min. 6 karakter):</Text>

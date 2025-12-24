@@ -30,7 +30,7 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     // 1. Validasi
     if (!name || !email || !password) {
-      Alert.alert('Eits!', 'Nama, Email, dan Password wajib diisi semua ya.');
+      Alert.alert('Nama, Email, dan Password wajib diisi semua.');
       return;
     }
 

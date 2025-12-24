@@ -39,7 +39,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Eits!', 'Email dan Password harus diisi ya.');
+      Alert.alert('Email dan Password harus diisi.');
       return;
     }
     setLoading(true);
