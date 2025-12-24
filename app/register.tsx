@@ -110,10 +110,10 @@ export default function RegisterScreen() {
                 {/* FORM INPUT */}
                 <View style={styles.form}>
                 
-                    <Text style={styles.label}>Nama Lengkap</Text>
+                    <Text style={styles.label}>Nama</Text>
                     <TextInput
                         style={styles.input}
-                        placeholder="Nama panggilanmu siapa?"
+                        placeholder="Masukkan nama"
                         value={name}
                         onChangeText={setName}
                         placeholderTextColor="#aaa"
