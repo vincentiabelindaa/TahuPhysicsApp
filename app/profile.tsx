@@ -8,10 +8,8 @@ import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  KeyboardAvoidingView, // <--- 1. IMPORT INI
-  Platform // <--- 2. IMPORT INI
-  ,
-
+  KeyboardAvoidingView,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -100,9 +98,27 @@ export default function ProfileScreen() {
 
   // --- 4. LOGOUT ---
   const handleLogout = () => {
+      if (Platform.OS === 'web') {
+          const yakin = window.confirm("Yakin ingin keluar akun?");
+          
+          if (yakin) {
+              signOut(auth).then(() => {
+                  window.location.href = "/"; 
+              }).catch((err) => console.error(err));
+          }
+          return;
+      }
+
       Alert.alert("Keluar", "Yakin ingin keluar akun?", [
           { text: "Batal", style: "cancel" },
-          { text: "Ya, Keluar", style: 'destructive', onPress: () => { signOut(auth); router.replace('/'); } }
+          { 
+              text: "Ya, Keluar", 
+              style: 'destructive', 
+              onPress: async () => { 
+                  await signOut(auth); 
+                  router.replace('/'); 
+              } 
+          }
       ]);
   };
 
