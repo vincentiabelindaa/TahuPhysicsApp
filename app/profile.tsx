@@ -48,28 +48,43 @@ export default function ProfileScreen() {
 
   // --- 2. UPDATE PROFIL ---
   const handleUpdateProfile = () => {
-    if (!name.trim()) {
-        Alert.alert("Gagal", "Nama tidak boleh kosong.");
+      // Validasi Kosong
+      if (!name.trim()) {
+        if (Platform.OS === 'web') {
+          window.alert("Nama tidak boleh kosong.");
+        } else {
+          Alert.alert("Gagal", "Nama tidak boleh kosong.");
+        }
         return;
-    }
-    const user = auth.currentUser;
-    if (user) {
+      }
+
+      const user = auth.currentUser;
+      if (user) {
         updateDoc(doc(db, "users", user.uid), { name: name });
-        Alert.alert("Sukses", "Profil berhasil diperbarui!");
-    }
-  };
+        
+        // Notifikasi Sukses
+        if (Platform.OS === 'web') {
+          window.alert("Profil berhasil diperbarui!");
+        } else {
+          Alert.alert("Sukses", "Profil berhasil diperbarui!");
+        }
+      }
+    };
 
   // --- 3. GANTI PASSWORD ---
   const handleChangePassword = async () => {
     if (!oldPass || !newPass || !confirmPass) {
+        if (Platform.OS === 'web') window.alert("Semua kolom password harus diisi.");
         Alert.alert("Error", "Semua kolom password harus diisi.");
         return;
     }
     if (newPass.length < 6) {
+        if (Platform.OS === 'web') window.alert("Password baru minimal 6 karakter.");
         Alert.alert("Error", "Password baru minimal 6 karakter.");
         return;
     }
     if (newPass !== confirmPass) {
+        if (Platform.OS === 'web') window.alert("Konfirmasi password tidak cocok.");
         Alert.alert("Error", "Konfirmasi password tidak cocok.");
         return;
     }
@@ -82,7 +97,12 @@ export default function ProfileScreen() {
             await reauthenticateWithCredential(user, credential);
             await updatePassword(user, newPass);
             
-            Alert.alert("Sukses", "Password berhasil diganti. Silakan login ulang.");
+            if (Platform.OS === 'web') {
+              window.alert("Password berhasil diganti. Silakan login ulang.");
+            }
+            else {
+              Alert.alert("Sukses", "Password berhasil diganti. Silakan login ulang.");
+            }
             setOldPass('');
             setNewPass('');
             setConfirmPass('');
@@ -90,7 +110,12 @@ export default function ProfileScreen() {
     } catch (error: any) {
         let msg = "Gagal mengganti password.";
         if (error.code === 'auth/wrong-password') msg = "Password saat ini salah.";
-        Alert.alert("Gagal", msg);
+        if (Platform.OS === 'web') {
+          window.alert(msg);
+        }
+        else {
+          Alert.alert("Gagal", msg);
+        }
     } finally {
         setLoadingPass(false);
     }
