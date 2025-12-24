@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView, // <--- 1. IMPORT INI
   Platform // <--- 2. IMPORT INI
   ,
+
   ScrollView,
   StyleSheet,
   Text,
@@ -137,7 +138,7 @@ export default function ProfileScreen() {
               Informasi Akun
             </Text>
 
-            <Text style={styles.label}>Nama Lengkap:</Text>
+            <Text style={styles.label}>Nama:</Text>
             <TextInput 
               style={styles.input}
               value={name}

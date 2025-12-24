@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   // --- HEADER STYLE (Sama dengan file lain) ---
   header: {
     padding: 20,
-    paddingTop: 60,
+    paddingTop: 50,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
