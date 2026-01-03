@@ -450,7 +450,6 @@ const styles = StyleSheet.create({
     color: '#0d47a1',
     fontWeight: 'bold',
   },
-  // Feedback
   feedbackBox: {
     padding: 15,
     borderRadius: 8,
