@@ -12,7 +12,6 @@ const CHALLENGES_DATA = [
   {
     id: 'challenge_2',
     title: 'Tantangan #2: Lintasan Variasi',
-    // UPDATE DISINI: Deskripsi sesuai request
     description: 'Atur Massa = 7.5 kg. Buat lintasan: min 1 Datar, 2 Naik, 1 Lembah, 1 Turun, dan 1 Bukit. Selesaikan lintasannya!',
   },
 ];

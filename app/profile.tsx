@@ -23,7 +23,6 @@ export default function ProfileScreen() {
   const theme = Colors.light || { background: '#f0f2f5', primary: '#0d47a1', secondary: '#42a5f5', cardBorder: '#bbdefb', danger: '#ffebee' };
   const router = useRouter(); 
 
-  // --- STATE ---
   const [name, setName] = useState(''); 
   const [email, setEmail] = useState(''); 
   
@@ -33,7 +32,6 @@ export default function ProfileScreen() {
   
   const [loadingPass, setLoadingPass] = useState(false); 
 
-  // --- 1. AMBIL DATA ---
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {
@@ -46,9 +44,7 @@ export default function ProfileScreen() {
     }
   }, []);
 
-  // --- 2. UPDATE PROFIL ---
   const handleUpdateProfile = () => {
-      // Validasi Kosong
       if (!name.trim()) {
         if (Platform.OS === 'web') {
           window.alert("Nama tidak boleh kosong.");
@@ -62,7 +58,6 @@ export default function ProfileScreen() {
       if (user) {
         updateDoc(doc(db, "users", user.uid), { name: name });
         
-        // Notifikasi Sukses
         if (Platform.OS === 'web') {
           window.alert("Profil berhasil diperbarui!");
         } else {
@@ -71,7 +66,6 @@ export default function ProfileScreen() {
       }
     };
 
-  // --- 3. GANTI PASSWORD ---
   const handleChangePassword = async () => {
     if (!oldPass || !newPass || !confirmPass) {
         if (Platform.OS === 'web') window.alert("Semua kolom password harus diisi.");
@@ -121,7 +115,6 @@ export default function ProfileScreen() {
     }
   };
 
-  // --- 4. LOGOUT ---
   const handleLogout = () => {
       if (Platform.OS === 'web') {
           const yakin = window.confirm("Yakin ingin keluar akun?");
@@ -152,7 +145,6 @@ export default function ProfileScreen() {
       
       <Stack.Screen options={{ headerShown: false }} />
 
-      {/* HEADER TETAP DI ATAS */}
       <View style={styles.customHeader}>
          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
              <Ionicons name="arrow-back" size={24} color={theme.primary} />
@@ -161,19 +153,16 @@ export default function ProfileScreen() {
          <View style={{ width: 40 }} />
       </View>
 
-      {/* 3. BUNGKUS SCROLLVIEW DENGAN KEYBOARDAVOIDINGVIEW */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={{ flex: 1 }}
       >
-        {/* 4. TAMBAHKAN style={{ flex: 1 }} DI SCROLLVIEW */}
         <ScrollView 
             style={{ flex: 1 }} 
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
         >
         
-          {/* --- KARTU 1: INFORMASI AKUN --- */}
           <View style={styles.card}>
             <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
               Informasi Akun
@@ -202,7 +191,6 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </View>
 
-          {/* --- KARTU 2: GANTI PASSWORD --- */}
           <View style={styles.card}>
             <Text style={[styles.cardTitle, { color: theme.primary, borderColor: theme.cardBorder }]}>
               Ganti Password
@@ -264,7 +252,6 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  // --- STYLE HEADER CUSTOM ---
   customHeader: {
     backgroundColor: '#fff',
     flexDirection: 'row',
@@ -290,11 +277,10 @@ const styles = StyleSheet.create({
     color: '#0d47a1',
   },
 
-  // --- STYLE KONTEN ---
   scrollContent: {
     flexGrow: 1,
     padding: 20,
-    paddingBottom: 50, // Tambahan padding bawah biar enak scroll mentoknya
+    paddingBottom: 50, 
   },
   card: {
     backgroundColor: 'white',

@@ -1,6 +1,6 @@
 import { auth, db } from '@/firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Stack, useRouter } from 'expo-router'; // Tambah import Stack
+import { Stack, useRouter } from 'expo-router'; 
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
@@ -28,7 +28,6 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
 
   const handleRegister = async () => {
-    // 1. Validasi
     if (!name || !email || !password) {
       Alert.alert('Nama, Email, dan Password wajib diisi semua.');
       return;
@@ -37,13 +36,11 @@ export default function RegisterScreen() {
     setLoading(true);
 
     try {
-      // 2. Buat User di Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
       console.log('Auth Berhasil:', user.email);
 
-      // 3. Simpan data di background (Tanpa await biar UI gak macet)
       setDoc(doc(db, "users", user.uid), {
         name: name,
         email: email,
@@ -54,11 +51,10 @@ export default function RegisterScreen() {
          console.error("Gagal simpan data background:", err);
       });
 
-      // 4. Matikan Loading & Pindah
       setLoading(false);
 
       Alert.alert('Berhasil!', 'Akunmu sudah jadi. Yuk masuk!', [
-        { text: 'OK', onPress: () => router.replace('/') } // Balik ke Login (index)
+        { text: 'OK', onPress: () => router.replace('/') } 
       ]);
 
     } catch (error: any) {
@@ -76,7 +72,6 @@ export default function RegisterScreen() {
 
   return (
     <>
-      {/* 1. HILANGKAN HEADER BAWAAN */}
       <Stack.Screen options={{ headerShown: false }} />
 
       <SafeAreaView style={styles.container}>
@@ -86,17 +81,14 @@ export default function RegisterScreen() {
         >
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             
-            {/* 2. TOMBOL BACK (Style Baru: Chevron) */}
             <View style={styles.headerNav}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="chevron-back" size={28} color="#333" />
                 </TouchableOpacity>
             </View>
 
-            {/* 3. CARD CONTAINER (Kotak Putih) */}
             <View style={styles.card}>
                 
-                {/* LOGO & JUDUL */}
                 <View style={styles.headerCenter}>
                     <Image 
                         source={require('@/assets/images/tahu.jpg')} 
@@ -107,7 +99,6 @@ export default function RegisterScreen() {
                     <Text style={styles.subtitle}>Gabung TahuPhysics sekarang!</Text>
                 </View>
 
-                {/* FORM INPUT */}
                 <View style={styles.form}>
                 
                     <Text style={styles.label}>Nama</Text>
@@ -140,7 +131,6 @@ export default function RegisterScreen() {
                         placeholderTextColor="#aaa"
                     />
 
-                    {/* TOMBOL DAFTAR */}
                     <TouchableOpacity 
                         style={styles.registerButton} 
                         onPress={handleRegister}
@@ -153,7 +143,6 @@ export default function RegisterScreen() {
                         )}
                     </TouchableOpacity>
 
-                    {/* LINK LOGIN */}
                     <View style={styles.footerLink}>
                         <Text style={styles.footerText}>Sudah punya akun? </Text>
                         <TouchableOpacity onPress={() => router.back()}>
@@ -170,11 +159,10 @@ export default function RegisterScreen() {
   );
 }
 
-// --- STYLES (Sama Persis dengan Login, cuma beda warna tombol) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F0F4F8', // Background luar abu/biru muda
+    backgroundColor: '#F0F4F8', 
   },
   scrollContent: {
     padding: 20,
@@ -201,7 +189,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 25,
     marginTop: 40, 
-    // Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
@@ -248,8 +235,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   registerButton: {
-    backgroundColor: '#00897B', // Hijau Tosca (Biar beda dikit sama Login)
-    padding: 16,
+    backgroundColor: '#00897B', 
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 10,
@@ -274,7 +260,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   linkText: {
-    color: '#00897B', // Samain warna text link sama tombol
+    color: '#00897B', 
     fontWeight: 'bold',
     fontSize: 14,
   }

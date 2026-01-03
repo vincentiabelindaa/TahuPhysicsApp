@@ -2,7 +2,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-// --- DATA SOAL (Sudah dirapikan dari LaTeX ke Teks Biasa) ---
 const QUESTIONS = [
   {
     id: 'q1',
@@ -206,23 +205,19 @@ export default function QuizScreen() {
   const [score, setScore] = useState(0);
   const [finished, setFinished] = useState(false);
   
-  // State untuk melacak jawaban user per soal
-  // { [index]: { selected: 'A', isCorrect: true/false, checked: true } }
   const [userAnswers, setUserAnswers] = useState<any>({});
 
   const currentQ = QUESTIONS[currentIndex];
   const currentStatus = userAnswers[currentIndex] || {};
 
-  // Fungsi Pilih Jawaban
   const handleSelect = (key: string) => {
-    if (currentStatus.checked) return; // Gabisa ganti kalo udah dicek
+    if (currentStatus.checked) return; 
     setUserAnswers({
       ...userAnswers,
       [currentIndex]: { ...currentStatus, selected: key }
     });
   };
 
-  // Fungsi Periksa Jawaban
   const handleCheck = () => {
     if (!currentStatus.selected) {
       Alert.alert("Pilih Jawaban", "Silakan pilih salah satu jawaban dulu.");
@@ -231,17 +226,14 @@ export default function QuizScreen() {
 
     const isCorrect = currentStatus.selected === currentQ.correct;
     
-    // Update Score jika benar
     if (isCorrect) setScore(score + 1);
 
-    // Simpan status sudah dicek
     setUserAnswers({
       ...userAnswers,
       [currentIndex]: { ...currentStatus, checked: true, isCorrect }
     });
   };
 
-  // Navigasi
   const handleNext = () => {
     if (currentIndex < QUESTIONS.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -263,7 +255,6 @@ export default function QuizScreen() {
     setFinished(false);
   };
 
-  // --- TAMPILAN SKOR AKHIR ---
   if (finished) {
     return (
       <View style={styles.container}>
@@ -288,7 +279,6 @@ export default function QuizScreen() {
     );
   }
 
-  // --- TAMPILAN SOAL ---
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -298,14 +288,11 @@ export default function QuizScreen() {
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
         
-        {/* Kartu Soal */}
         <View style={styles.questionCard}>
           <Text style={styles.questionText}>{currentQ.question}</Text>
           
-          {/* Opsi Jawaban */}
           {currentQ.options.map((opt) => {
             const isSelected = currentStatus.selected === opt.key;
-            // Style dinamis
             let optionStyle = styles.option;
             let textStyle = styles.optionText;
 
@@ -330,7 +317,6 @@ export default function QuizScreen() {
           })}
         </View>
 
-        {/* Feedback (Muncul setelah dicek) */}
         {currentStatus.checked && (
           <View style={[
             styles.feedbackBox, 
@@ -353,9 +339,7 @@ export default function QuizScreen() {
 
       </ScrollView>
 
-      {/* Footer Navigasi */}
       <View style={styles.footer}>
-        {/* Tombol Kiri: Prev (Hanya muncul kalau bukan no 1) */}
         <View style={{flex: 1}}>
           {currentIndex > 0 && (
             <TouchableOpacity style={styles.navBtnSecondary} onPress={handlePrev}>
@@ -364,7 +348,6 @@ export default function QuizScreen() {
           )}
         </View>
 
-        {/* Tombol Tengah/Kanan: Periksa atau Lanjut */}
         <View style={{flex: 1, alignItems: 'flex-end'}}>
           {!currentStatus.checked ? (
             <TouchableOpacity style={styles.checkBtn} onPress={handleCheck}>
@@ -407,7 +390,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 20,
-    paddingBottom: 100, // Ruang buat footer
+    paddingBottom: 100, 
   },
   questionCard: {
     backgroundColor: '#fff',
@@ -492,7 +475,6 @@ const styles = StyleSheet.create({
     color: '#444',
     lineHeight: 20,
   },
-  // Footer
   footer: {
     position: 'absolute',
     bottom: 0,
@@ -506,19 +488,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  // --- INI STYLE YG DIUBAH (BIAR JADI TOMBOL) ---
   navBtnSecondary: {
-    backgroundColor: '#9e9e9e', // Warna abu-abu tombol
+    backgroundColor: '#9e9e9e', 
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
     alignSelf: 'flex-start',
   },
   navBtnTextSec: {
-    color: '#fff', // Teks jadi putih
+    color: '#fff', 
     fontWeight: 'bold',
   },
-  // ----------------------------------------------
   checkBtn: {
     backgroundColor: '#4caf50',
     paddingVertical: 10,
@@ -539,7 +519,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  // Result Screen
   resultContainer: {
     flex: 1,
     justifyContent: 'center',

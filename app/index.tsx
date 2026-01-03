@@ -24,11 +24,9 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true); 
 
-  // --- CEK STATUS LOGIN (AUTO REDIRECT) ---
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Kalau user ada, langsung lempar ke Dashboard
         router.replace('/(tabs)'); 
       } else {
         setLoading(false);
@@ -45,7 +43,6 @@ export default function LoginScreen() {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // Router otomatis pindah karena useEffect di atas
     } catch (error: any) {
       console.error(error);
       let errorMessage = 'Terjadi kesalahan saat login.';
@@ -68,7 +65,6 @@ export default function LoginScreen() {
 
   return (
     <>
-      {/* Matikan Header Bawaan */}
       <Stack.Screen options={{ headerShown: false }} />
 
       <SafeAreaView style={styles.container}>
@@ -78,7 +74,6 @@ export default function LoginScreen() {
         >
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             
-            {/* CARD CONTAINER (Kotak Putih di Tengah) */}
             <View style={styles.card}>
               
               <View style={styles.headerCenter}>
@@ -136,7 +131,6 @@ export default function LoginScreen() {
   );
 }
 
-// --- STYLES (Sudah dirapikan ke bawah vertikal) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -153,7 +147,6 @@ const styles = StyleSheet.create({
     padding: 25,
     borderColor: '#bbdefb',
     borderWidth: 2,
-    // Shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.1,
@@ -205,7 +198,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 10,
-    // Shadow Button
     shadowColor: '#040404ff',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

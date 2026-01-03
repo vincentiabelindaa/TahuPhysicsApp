@@ -6,9 +6,7 @@ export default function PlaylistScreen() {
   const playlistId = "PLXz9cUd9nygPdfr9RD4579RyNsHvxjhu1";
   const [playing, setPlaying] = useState(false);
 
-  // --- LOGIKA UKURAN VIDEO ---
   const { width } = useWindowDimensions();
-  // Dikurangi 70 karena: Padding Container (20*2) + Padding Card (15*2) = 70
   const videoWidth = width - 70; 
   const videoHeight = videoWidth * (9 / 16);
 
@@ -21,7 +19,6 @@ export default function PlaylistScreen() {
   return (
     <View style={styles.container}>
       
-      {/* HEADER (Sama persis dengan Lab & Challenge) */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Playlist Materi</Text>
         <Text style={styles.headerSubtitle}>
@@ -98,7 +95,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f0f8ff',
   },
-  // --- HEADER STYLE (Sama dengan file lain) ---
   header: {
     padding: 20,
     paddingTop: 50,
@@ -117,7 +113,6 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 20,
   },
-  // --- CONTENT STYLE ---
   scrollContent: {
     padding: 20,
     paddingBottom: 40,

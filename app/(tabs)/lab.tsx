@@ -7,10 +7,8 @@ import { WebView } from 'react-native-webview';
 export default function LabScreen() {
   const webViewRef = useRef<WebView>(null);
   
-  // State untuk menyimpan HTML khusus Web
   const [webHtml, setWebHtml] = useState(""); 
 
-  // --- HTML CODE (DIFORMAT KE BAWAH BIAR RAPI) ---
   const BaseHTML = `
     <!DOCTYPE html>
     <html>
@@ -343,20 +341,15 @@ export default function LabScreen() {
     </html>
   `;
 
-  // --- FUNGSI UTAMA PENGOLAH DATA (HP & WEB) ---
   const processGameData = async (data: any) => {
     try {
       if (data.type === 'CHALLENGE_COMPLETE') {
-        // 1. Munculkan Notifikasi DULUAN sebelum state berubah
-        // Kalau Web -> Pakai window.alert browser biar nge-block dan pasti kebaca
-        // Kalau HP -> Pakai Alert Native
         if (Platform.OS === 'web') {
            window.alert("🎉 Selamat! " + data.message);
         } else {
            Alert.alert("🎉 Selamat!", data.message);
         }
 
-        // 2. Baru Simpan ke Storage (Centang Hijau)
         const completedJson = await AsyncStorage.getItem('completedChallenges');
         let completed = completedJson ? JSON.parse(completedJson) : [];
         if (!completed.includes(data.challengeId)) {
@@ -365,7 +358,6 @@ export default function LabScreen() {
         }
         await AsyncStorage.removeItem('activeChallenge');
         
-        // 3. Update Tampilan (Hilangkan Banner)
         if (webViewRef.current) {
           webViewRef.current.injectJavaScript(`window.receiveActiveChallenge('');`);
         }
