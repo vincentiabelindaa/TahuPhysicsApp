@@ -26,7 +26,7 @@ Terdapat tiga cara untuk menjalankan aplikasi ini.
 
 ---
 ### Opsi 2: Akses via Web
-Akses aplikasi melalui browser di Laptop dari link berikut.
+Akses aplikasi melalui browser di laptop dari link berikut.
 https://tahuphysics.vercel.app
 
 ---
