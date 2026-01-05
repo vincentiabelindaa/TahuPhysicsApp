@@ -1,6 +1,6 @@
 import { auth, db } from '@/firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Stack, useRouter } from 'expo-router'; 
+import { Stack, useRouter } from 'expo-router';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
   },
   registerButton: {
     backgroundColor: '#00897B', 
+    padding: 16,
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 10,
