@@ -18,16 +18,16 @@
 
 Terdapat dua cara untuk menjalankan aplikasi ini.
 
-### Opsi 1: Download Aplikasi (Siap Pakai)
+### Opsi 1: Download Aplikasi (Langsung)
 Cara ini paling mudah jika kamu hanya ingin mencoba aplikasi tanpa membuka kodingan.
 
-1.  Download file aplikasi TahuPhysics.apk yang ada di salah satu file GitHub di HP (aplikasi untuk Android).
-2.  Install file tersebut di HP kamu.
-3.  Buka aplikasi **TahuPhysics** dan selamat belajar! 
+1.  Download file aplikasi TahuPhysics.apk yang ada di salah satu file GitHub (aplikasi untuk Android) atau melalui link ini (https://expo.dev/accounts/indanauliaz/projects/TahuPhysicsApp/builds/ea326392-0ae3-452f-a3f9-b407be20fac2).
+2.  Install file tersebut di HP.
+3.  Buka aplikasi **TahuPhysics** yang sudah didownload! 
 
 ---
 
-### Opsi 2: Download Melalui Source Code (Mode Developer)
+### Opsi 2: Download Melalui Source Code 
 
 #### 1. Persiapan Awal
 Pastikan sudah terinstall:
