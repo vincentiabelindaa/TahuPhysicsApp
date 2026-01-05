@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# TahuPhysics
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**TahuPhysics** adalah aplikasi mobile edukasi interaktif yang dirancang untuk membantu siswa memahami konsep Fisika, khususnya topik **Usaha dan Energi**, dengan cara yang interaktif dan melalui simulasi virtual lab.
 
-## Get started
+---
 
-1. Install dependencies
+## Fitur Utama
 
-   ```bash
-   npm install
-   ```
+* **Materi Playlist:** Video pembelajaran terintegrasi (Youtube) tanpa harus keluar aplikasi.
+* **Virtual Lab:** Simulasi fisika interaktif melalui eksperimen dengan energi kinetik, potensial, dan mekanik secara *real-time*.
+* **Challenge:** Tantangan berupa perintah yang harus diselesaikan pengguna melalui Virtual Lab.
+* **Quiz:** Evaluasi pemahaman pengguna melalui latihan soal.
+* **Profil:** Halaman profil interaktif dengan kustomisasi foto dan data pengguna.
 
-2. Start the app
+---
 
-   ```bash
-   npx expo start
-   ```
+## Cara Menggunakan Aplikasi
 
-In the output, you'll find options to open the app in a
+Terdapat dua cara untuk menjalankan aplikasi ini.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Opsi 1: Download Aplikasi (Siap Pakai)
+Cara ini paling mudah jika kamu hanya ingin mencoba aplikasi tanpa membuka kodingan.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+1.  Download file aplikasi TahuPhysics.apk yang ada di salah satu file GitHub di HP (aplikasi untuk Android).
+2.  Install file tersebut di HP kamu.
+3.  Buka aplikasi **TahuPhysics** dan selamat belajar! 
 
-## Get a fresh project
+---
 
-When you're ready, run:
+### Opsi 2: Download Melalui Source Code (Mode Developer)
+
+#### 1. Persiapan Awal
+Pastikan sudah terinstall:
+* **Git**: Untuk clone repository.
+* **Expo Go**: Aplikasi di HP (Play Store/App Store) untuk testing.
+
+#### 2. Instalasi
+Buka terminal dan jalankan perintah:
 
 ```bash
-npm run reset-project
+# 1. Clone repository
+git clone [https://github.com/username-kamu/TahuPhysics.git](https://github.com/username-kamu/TahuPhysics.git)
+
+# 2. Masuk folder
+cd TahuPhysics
+
+# 3. Install dependencies
+npm install
+npx expo install react-native-webview react-native-youtube-iframe @react-native-async-storage/async-storage
+
+# 4. Jalankan program
+npx expo start
+
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+#### 3. Buka Aplikasi Expo Go
+* Scan QR Code yang muncul di terminal.
+* Pastikan HP dan Laptop terhubung di Wi-Fi yang sama.
