@@ -43,10 +43,10 @@ Buka terminal dan jalankan perintah:
 
 ```bash
 # 1. Clone repository
-git clone [https://github.com/username-kamu/TahuPhysics.git](https://github.com/username-kamu/TahuPhysics.git)
+git clone https://github.com/vincentiabelindaa/TahuPhysicsApp.git
 
 # 2. Masuk folder
-cd TahuPhysics
+cd TahuPhysicsApp
 
 # 3. Install dependencies
 npm install
