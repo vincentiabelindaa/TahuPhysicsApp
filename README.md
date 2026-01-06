@@ -10,8 +10,8 @@
 * **Virtual Lab:** Simulasi fisika interaktif melalui eksperimen dengan energi kinetik, potensial, dan mekanik secara *real-time*.
 * **Challenge:** Tantangan berupa perintah yang harus diselesaikan pengguna melalui Virtual Lab.
 * **Quiz:** Evaluasi pemahaman pengguna melalui latihan soal.
-* **Profil:** Halaman profil interaktif dengan kustomisasi foto dan data pengguna.
-
+* **Profil:** Halaman profil untuk mengubah nama dan password pengguna.
+  
 ---
 
 ## Cara Menggunakan Aplikasi
